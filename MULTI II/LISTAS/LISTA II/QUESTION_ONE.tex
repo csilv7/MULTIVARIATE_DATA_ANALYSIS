@@ -1,0 +1,40 @@
+\section*{\textbf{Questão 1.} Análise A Posteriori}
+
+Pode-se estimar os vetores $\boldsymbol{\tau_{k}}$ para os tratamentos A, B, C e D de forma que
+\begin{align*}
+    \boldsymbol{\widehat{\tau}_{A}} & = \begin{pmatrix} \overline{\boldsymbol{X}}_{A} - \overline{\boldsymbol{X}} \end{pmatrix}^{\intercal} = \begin{pmatrix} -274.95 \quad -0.59 \end{pmatrix}^{\intercal} \\
+    \boldsymbol{\widehat{\tau}_{B}} & = \begin{pmatrix} \overline{\boldsymbol{X}}_{B} - \overline{\boldsymbol{X}} \end{pmatrix}^{\intercal} = \begin{pmatrix} -202.75 \quad 0.37 \end{pmatrix}^{\intercal} \\
+    \boldsymbol{\widehat{\tau}_{C}} & = \begin{pmatrix} \overline{\boldsymbol{X}}_{C} - \overline{\boldsymbol{X}} \end{pmatrix}^{\intercal} = \begin{pmatrix} 179.45 \quad 0.03 \end{pmatrix}^{\intercal} \\
+    \boldsymbol{\widehat{\tau}_{D}} & = \begin{pmatrix} \overline{\boldsymbol{X}}_{D} - \overline{\boldsymbol{X}} \end{pmatrix}^{\intercal} = \begin{pmatrix} 298.25 \quad 0.20 \end{pmatrix}^{\intercal}
+\end{align*}
+
+Usando a Soma de Quadrados do Resíduo de Within ($\mathbf{W}$) expressa por
+\begin{align*}
+    \mathbf{W} & = \sum_{k=1}^{g} \sum_{i=1}^{n_{k}} (\mathbf{x}_{ki} - \overline{\mathbf{x}}_{k})(\mathbf{x}_{ki} - \overline{\mathbf{x}}_{k})^{\intercal} = n_{1} \mathbf{S}_{1} + n_{2} \mathbf{S}_{2} + \ldots + n_{g} \mathbf{S}_{g} \\
+    \mathbf{W} & \approx \begin{bmatrix}  29058.55 & 10.26 \\ 10.26 & 0.32  \end{bmatrix}, \text{} 
+\end{align*}
+com $n - g = 20 - 4 = 16$ graus de liberdade. Onde $n = n_{1} + n_{2} + \ldots + n_{g}$ é o tamanho total da amostra e $g = 4$ o número de tratamentos em comparação. Temos que a diferença entre a produtividade de dois tratamentos quaisquer pode ser obtida por $$\boldsymbol{\widehat{\tau}}_{k_{1}} - \boldsymbol{\widehat{\tau}}_{j_{1}},$$ com $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{k_{1}} - \boldsymbol{\widehat{\tau}}_{j_{1}}\right] = \left( \dfrac{1}{n_{k}} + \dfrac{1}{n_{j}} \right) \dfrac{\mathbf{W}_{11}}{n - g}$. De posse da estatística $\boldsymbol{\widehat{\tau}}_{k_{1}} - \boldsymbol{\widehat{\tau}}_{j_{1}}$ e de sua variância, podemos montar o intervalo de $100(1 - \alpha)\%$ de confiança, expresso por $$(\boldsymbol{\widehat{\tau}}_{k_{1}} - \boldsymbol{\widehat{\tau}}_{j_{1}}) \pm t_{n-g \ ; \ \alpha/pg (p -1)} \sqrt{\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{k_{1}} - \boldsymbol{\widehat{\tau}}_{j_{1}}\right]}.$$
+
+\subsection*{Comparação entre a \textit{Produtividade} A e B}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{B_{1}} = -274.95 - (-202.75) = -72.20,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{B_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-72.20 \pm 3.34 \times 26.95 \approx [-162,21 \ ; \ 17.81].$$ Como o intervalo contém o $0$, diz-se que não há diferença entre a Produtividade do Tratamento A e do Tratamento B, ao nível de significância de 5\%.
+
+\subsection*{Comparação entre a \textit{Produtividade} A e C}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{C_{1}} = -274.95 - 179.45 = -454.4,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{C_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-454.4 \pm 3.34 \times 26.95 \approx [-364.39 \ ; \ -544.41].$$ Como o intervalo não contém o $0$, diz-se que há diferença entre a Produtividade do Tratamento A e do Tratamento C, ao nível de significância de 5\%.
+
+\subsection*{Comparação entre a \textit{Produtividade} A e D}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}} = -274.95 - 289.25 = -564.2,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{A_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-564.2 \pm 3.34 \times 26.95 \approx [-654.21 \ ; \ -474.19].$$ Como o intervalo não contém o $0$, diz-se que há diferença entre a Produtividade do Tratamento A e do Tratamento D, ao nível de significância de 5\%.
+
+\subsection*{Comparação entre a \textit{Produtividade} B e C}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{B_{1}} - \boldsymbol{\widehat{\tau}}_{C_{1}} = -202.25 - 179.45 = -381.7,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{B_{1}} - \boldsymbol{\widehat{\tau}}_{C_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-381.7 \pm 3.34 \times 26.95 \approx [-471,71 \ ; \ -291,69].$$ Como o intervalo não contém o $0$, diz-se que há diferença entre a Produtividade do Tratamento A e do Tratamento D, ao nível de significância de 5\%.
+
+\subsection*{Comparação entre a \textit{Produtividade} B e D}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{B_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}} = -202.25 - 298.75 = -501,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{B_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-501 \pm 3.34 \times 26.95 \approx [-591.01 \ ; \ -410.99].$$ Como o intervalo não contém o $0$, diz-se que há diferença entre a Produtividade do Tratamento A e do Tratamento D, ao nível de significância de 5\%.
+
+\subsection*{Comparação entre a \textit{Produtividade} C e D}
+
+Temos que $$\boldsymbol{\widehat{\tau}}_{C_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}} = 179.45 - 298.25 = -118.8,$$ e $\widehat{Var}\left[\boldsymbol{\widehat{\tau}}_{C_{1}} - \boldsymbol{\widehat{\tau}}_{D_{1}}\right] = \left( \dfrac{1}{5} + \dfrac{1}{5} \right) \dfrac{29058.55}{20 - 4} = 726.46,$ logo, $\sqrt{726.46} \approx 26.95$. Fixando um $\alpha = 0.05$, temos que o quantil de acordo com a correção de Bonferroni $t_{20-4 \ ; \ 0.05/2 \cdot 4 \cdot (4-1)} = t_{16 \ ; \ 0.002} \approx 3.34$. Então, o intervalo de confiança fica $$-118.8 \pm 3.34 \times 26.95 \approx [-208.81 \ ; \ -28.79].$$ Como o intervalo não contém o $0$, diz-se que há diferença entre a Produtividade do Tratamento A e do Tratamento D, ao nível de significância de 5\%.

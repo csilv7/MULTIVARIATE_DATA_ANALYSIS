@@ -1,309 +1,69 @@
-# -------------------------------
-# [*] CONFIGURAÇÕES INICIAIS DO R
-# -------------------------------
-options(OutDec = ",", digits = 4)
-library(ggplot2)
-library(gridExtra)
-library(dplyr)
+# --------------------------
+# [*] CONFIGURAÇÕES INICIAIS
+# --------------------------
+library(readxl)
+library(tidyverse)
 library(MVN)
+library(ggplot2)
+library(car)
 
-# ----------------------------
-# DEFINIÇÕES DE FUNÇÕES USADAS
-# ----------------------------
-AIQ <- function(x) {
-  AIQ <- quantile(x, 0.75) - quantile(x, 0.25)
-  LI <- quantile(x, 0.25) - 1.5 * AIQ
-  LS <- quantile(x, 0.75) + 1.5 * AIQ
-  
-  return(data.frame(LI = LI, LS = LS))
-}
+# Caminho do arquivo.XLSX
+path <- "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_LISTA_II.xlsx"
 
-ajust.iter <- function(x) {
-  # Número de iterações necessárias
-  n.iter <- ncol(x)
-  
-  # Iterando de Imputação de Dados
-  for (col in seq(1, n.iter)) {
-    # Obtendo Limites para Ajuste
-    ajj <- AIQ(x[[col]])
-    
-    # Ajustando os Dados
-    x[[col]] <- ifelse((x[[col]] >= ajj$LI) & (x[[col]] <= ajj$LS), x[[col]], median(x[[col]]))
-  }
-  
-  # Retornar Dados Ajustados
-  return(x)
-}
+# Leitura do arquivo.XLSX
+DADOS_LISTA_II <- read_excel(path, sheet = "PEIXES")
 
-plot.histogram <- function(df) {
-  p11 <- ggplot(data = df, aes(x = S1)) +
-    geom_histogram(bins = 10, fill ="green", alpha = 0.45) +
-    labs(x = "1ª Semana", y = "Frequência") +
-    theme_minimal()
-  
-  p12 <- ggplot(data = df, aes(x = S2)) +
-    geom_histogram(bins = 10, fill ="red", alpha = 0.45) +
-    labs(x = "2ª Semana", y = "Frequência") +
-    theme_minimal()
-  
-  p13 <- ggplot(data = df, aes(x = S3)) +
-    geom_histogram(bins = 10, fill ="blue", alpha = 0.45) +
-    labs(x = "3ª Semana", y = "Frequência") +
-    theme_minimal()
-  
-  return(grid.arrange(p11, p12, p13, nrow = 1))
-}
+# --------------------------------------------------
+# [1] CONVERTA O BANCO DE DADOS PARA O FORMATO LONGO
+# --------------------------------------------------
 
-# ---------------------
-# [1] LEITURA DOS DADOS
-# ---------------------
+# 1. Empilhar os dados por método
+m1 <- DADOS_LISTA_II %>%
+  select(starts_with("M1")) %>%
+  rename(AROMA = M1y1, SABOR = M1y2, TEXTURA = M1y3, UMIDADE = M1y4) %>%
+  mutate(Method = "M1")
 
-# Caminho do arquivo
-path <- "C:/Users/user/Documents/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA I/DATASETS/df.csv"
+m2 <- DADOS_LISTA_II %>%
+  select(starts_with("M2")) %>%
+  rename(AROMA = M2y1, SABOR = M2y2, TEXTURA = M2y3, UMIDADE = M2y4) %>%
+  mutate(Method = "M2")
 
-# Leitura do arquivo
-df <- readr::read_csv(file = path)
+m3 <- DADOS_LISTA_II %>%
+  select(starts_with("M3")) %>%
+  rename(AROMA = M3y1, SABOR = M3y2, TEXTURA = M3y3, UMIDADE = M3y4) %>%
+  mutate(Method = "M3")
 
-# Separação dos Dados
-y <- df[df$condition=="Jejum",]
-x <- df[df$condition=="Ingestão",]
+# 2. Juntar tudo em um único data frame
+df <- bind_rows(m1, m2, m3) %>%
+  mutate(Method = factor(Method)) %>%
+  pivot_longer(cols = AROMA:UMIDADE, names_to = "VARIABLE", values_to = "SCORE")
 
-# --------------------------------
-# [2] ANÁLISE DESCRITIVA DOS DADOS
-# --------------------------------
+# -------------------------------------------
+# [2] FAÇA UMA ANÁLISE EXPLORATÓRIA DOS DADOS
+# -------------------------------------------
 
-# -----------------------
-# [2.1] MEDIDAS DE RESUMO
-# -----------------------
+# Medidas de Resumo
+summary(df %>% filter(Method == "M1") %>% select(starts_with("y"))) # Método 1
+summary(df %>% filter(Method == "M2") %>% select(starts_with("y"))) # Método 2
+summary(df %>% filter(Method == "M3") %>% select(starts_with("y"))) # Método 3
 
-# ------------------
-# [2.1.1] Y - JEJUM
-# ------------------
-describe <- rbind(
-  matrix(summary(y$S1), nrow = 1, ncol = 6),
-  matrix(summary(y$S2), nrow = 1, ncol = 6),
-  matrix(summary(y$S3), nrow = 1, ncol = 6)
-)
+# Boxplot
+ggplot(data = df, aes(x = VARIABLE, y = SCORE, color = Method)) +
+  geom_boxplot() +
+  labs(x = "Características", y = "Score", color = "Método") +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) +
+  theme_classic(base_size = 12)
 
-stds <- sqrt(diag(var(y[, -4])))
-
-describe <- cbind(
-  describe,
-  as.matrix(stds, ncol = length(stds))
-)
-
-# Formatação de Tabela
-knitr::kable(
-  describe, 
-  col.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo", "Desvio Padrão"),
-  escape = FALSE,
-  align = "c",
-  booktabs = TRUE
-)
-
-# --------------------
-# [2.1.2] X - INGESTÃO
-# --------------------
-describe <- rbind(
-  matrix(summary(x$S1), nrow = 1, ncol = 6),
-  matrix(summary(x$S2), nrow = 1, ncol = 6),
-  matrix(summary(x$S3), nrow = 1, ncol = 6)
-)
-
-stds <- sqrt(diag(var(x[, -4])))
-
-describe <- cbind(
-  describe,
-  as.matrix(stds, ncol = length(stds))
-)
-
-# Formatação de Tabela
-knitr::kable(
-  describe, 
-  col.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo", "Desvio Padrão"),
-  escape = FALSE,
-  align = "c",
-  booktabs = TRUE
-)
-
-# -------------
-# [2.2] BOXPLOT
-# -------------
-
-# -----------------
-# [2.2.1] Y - JEJUM
-# -----------------
-
-ggplot(data = y) +
-  geom_boxplot(aes(x = "1ª", y = S1), fill = "green") + 
-  geom_boxplot(aes(x = "2ª", y = S2), fill = "red") + 
-  geom_boxplot(aes(x = "3ª", y = S3), fill = "blue") + 
-  labs(x = "Semanas", y = "Níveis de Glicose no Sangue") +
+# Visualizações variadas
+df.WIDE <- bind_rows(m1, m2, m3) %>% mutate(Method = factor(Method))
+GGally::ggpairs(df.WIDE, 
+                mapping = aes(colour = Method, alpha = 0.75), 
+                columns = colnames(df.WIDE)[1:4]) +
   theme_minimal()
-
-# --------------------
-# [2.2.2] X - INGESTÃO
-# --------------------
-
-ggplot(data = x) +
-  geom_boxplot(aes(x = "1ª", y = S1), fill = "green") + 
-  geom_boxplot(aes(x = "2ª", y = S2), fill = "red") + 
-  geom_boxplot(aes(x = "3ª", y = S3), fill = "blue") + 
-  labs(x = "Semanas", y = "Níveis de Glicose no Sangue") +
-  theme_minimal()
-
-# ----------------------
-# [2.3] AJUSTE DOS DADOS
-# ----------------------
-
-# Criando cópias dos Data Frames
-y.copy <- dplyr::as_tibble(y)
-x.copy <- dplyr::as_tibble(x)
-
-# Ajustando os Dados
-y.copy[, -4] <- ajust.iter(y.copy[, -4])
-x.copy[, -4] <- ajust.iter(x.copy[, -4])
-
-# -----------------------------
-# [2.4] NOVAS MEDIDAS DE RESUMO
-# -----------------------------
-
-# ------------------
-# [2.4.1] Y - JEJUM
-# ------------------
-describe <- rbind(
-  matrix(summary(y.copy$S1), nrow = 1, ncol = 6),
-  matrix(summary(y.copy$S2), nrow = 1, ncol = 6),
-  matrix(summary(y.copy$S3), nrow = 1, ncol = 6)
-)
-
-stds <- sqrt( diag( var(y.copy[, -4]) ) )
-
-describe <- cbind(
-  describe,
-  as.matrix(stds, ncol = length(stds))
-)
-
-# Formatação de Tabela
-knitr::kable(
-  describe, 
-  col.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo", "Desvio Padrão"),
-  escape = FALSE,
-  align = "c",
-  booktabs = TRUE
-)
-
-# --------------------
-# [2.4.2] X - INGESTÃO
-# --------------------
-describe <- rbind(
-  matrix(summary(x.copy$S1), nrow = 1, ncol = 6),
-  matrix(summary(x.copy$S2), nrow = 1, ncol = 6),
-  matrix(summary(x.copy$S3), nrow = 1, ncol = 6)
-)
-
-stds <- sqrt( diag( var(x.copy[, -4]) ) )
-
-describe <- cbind(
-  describe,
-  as.matrix(stds, ncol = length(stds))
-)
-
-# Formatação de Tabela
-knitr::kable(
-  describe, 
-  col.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo", "Desvio Padrão"),
-  escape = FALSE,
-  align = "c",
-  booktabs = TRUE
-)
-
-# -------------
-# [2.5] BOXPLOT
-# -------------
-
-# -----------------
-# [2.5.1] Y - JEJUM
-# -----------------
-
-ggplot(data = y.copy) +
-  geom_boxplot(aes(x = "1ª", y = S1), fill = "green") + 
-  geom_boxplot(aes(x = "2ª", y = S2), fill = "red") + 
-  geom_boxplot(aes(x = "3ª", y = S3), fill = "blue") + 
-  labs(x = "Semanas", y = "Níveis de Glicose no Sangue") +
-  theme_minimal()
-
-# --------------------
-# [2.5.2] X - INGESTÃO
-# --------------------
-
-ggplot(data = x.copy) +
-  geom_boxplot(aes(x = "1ª", y = S1), fill = "green") + 
-  geom_boxplot(aes(x = "2ª", y = S2), fill = "red") + 
-  geom_boxplot(aes(x = "3ª", y = S3), fill = "blue") + 
-  labs(x = "Semanas", y = "Níveis de Glicose no Sangue") +
-  theme_minimal()
-
-# ------------------------
-# [2.6] BOXPLOT SEGMENTADO
-# ------------------------
-
-ggplot(data = rbind(y.copy, x.copy), aes(fill = condition)) +
-  geom_boxplot(aes(x = "1ª", y = S1)) +
-  geom_boxplot(aes(x = "2ª", y = S2)) +
-  geom_boxplot(aes(x = "3ª", y = S2)) +
-  labs(x = "Semanas", y = "Níveis de Glicose no Sangue") +
-  theme(legend.title = "Condição") +
-  theme_minimal()
-
-# ----------------
-# [2.7] HISTOGRAMA
-# ----------------
-
-# -----------------
-# [2.7.1] Y - JEJUM
-# -----------------
-plot.histogram(y.copy)
-
-# --------------------
-# [2.7.2] X - INGESTÃO
-# --------------------
-plot.histogram(x.copy)
-
-# ----------------
-# [2.8] CORRELAÇÃO
-# ----------------
-
-# Scatterplot + Correlação (e Teste de Significância) + Densidade
-GGally::ggpairs(rbind(y.copy, x.copy), 
-                mapping = aes(colour = condition, alpha = 0.75), 
-                columns = c("S1", "S2", "S3")) +
-  theme_minimal()
-
-# Plot dos Dados Gerais
-corrplot::corrplot(cor(rbind(y.copy, x.copy)[,1:3]), method = "color", addCoef.col = "red", tl.col = "black", 
-                   number.digits = 3, number.cex = 3)
-
-# Plot das Mulheres em Jejum
-corrplot::corrplot(cor(y.copy[,1:3]), method = "color", addCoef.col = "red", tl.col = "black", 
-                   number.digits = 3, number.cex = 3)
-
-# Plot das Mulheres em 1 Hora após a Ingestão de Açúcar
-corrplot::corrplot(cor(x.copy[,1:3]), method = "color", addCoef.col = "red", tl.col = "black", 
-                   number.digits = 3, number.cex = 3)
 
 # --------------------------------------
-# [3] TESTES DE NORMALIDADE MULTIVARIADA
+# [3] FAÇA A VERIFICAÇÃO DE PRESSUPOSTOS
 # --------------------------------------
-
-# Teste de Mardia
-mardia.test.y <- mvn(y.copy[, -4], mvnTest = "mardia")
-mardia.test.x <- mvn(x.copy[, -4], mvnTest = "mardia")
-
-# Teste de Henze-Zirklers
-hz.test.y <- mvn(y.copy[, -4], mvnTest = "hz")
-hz.test.x <- mvn(x.copy[, -4], mvnTest = "hz")
-
-# Teste de Royston
-royston.test.y <- mvn(y.copy[, -4], mvnTest = "royston")
-royston.test.x <- mvn(x.copy[, -4], mvnTest = "royston")
