@@ -23,4 +23,11 @@ format:
 
 # Questão 2. MANOVA {.unnumbered}
 
+## (a) Converta o banco de dados para o formato longo
+
+Os dados foram devidamente convertidos do formato *wide* para o formato *long*. O código utilizado para tal tarefa será anexado ao final deste documento. O conjunto de dados convertidos está disponível no link [DADOS_L2Q2_LONG.csv]().
+
+## (b) Faça uma análise exploratória dos dados
+
+## (c) Faça a verificação de pressupostos
 
