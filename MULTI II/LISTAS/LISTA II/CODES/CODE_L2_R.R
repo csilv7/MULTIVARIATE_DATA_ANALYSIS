@@ -48,7 +48,7 @@ df.LONG <- bind_rows(m1, m2, m3) %>%
   pivot_longer(cols = AROMA:UMIDADE, names_to = "VARIABLE", values_to = "SCORE")
 
 # Salvar Dados em Formato Long
-write.csv(df.LONG, file = "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_L2Q2_LONG.csv")
+write.csv(df.LONG, file = "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_L2Q2_LONG.csv", row.names = F)
 
 # -------------------------------------------
 # [2] FAÇA UMA ANÁLISE EXPLORATÓRIA DOS DADOS
@@ -81,7 +81,7 @@ ggplot(data = df.LONG, aes(x = VARIABLE, y = SCORE, color = Method)) +
 df.WIDE <- bind_rows(m1, m2, m3) %>% mutate(Method = factor(Method))
 
 # Salvar Dados em Formato Wide
-write.csv(df.WIDE, file = "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_L2Q2_WIDE.csv")
+write.csv(df.WIDE, file = "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_L2Q2_WIDE.csv", row.names = F)
 
 # Gerar Visualização
 GGally::ggpairs(df.WIDE, 
