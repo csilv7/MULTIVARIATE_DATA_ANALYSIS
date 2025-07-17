@@ -13,9 +13,15 @@ format:
         \input{TEX_AUX.tex}
       fontsize: 11pt
       geometry: [left=2cm, top=2cm, right=2cm, bottom=2cm]
-
-#lang: pt
+      echo: false
+      message: false
+      warning: false
 ---
+
+```{r}
+#| label: CODE
+source("~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/CODES/CODE_L2_R.R")
+```
 
 ```{=latex}
 \input{QUESTION_ONE.tex}
@@ -23,11 +29,223 @@ format:
 
 # Questão 2. MANOVA {.unnumbered}
 
-## (a) Converta o banco de dados para o formato longo
+## (a) Converta o banco de dados para o formato longo {.unnumbered}
 
-Os dados foram devidamente convertidos do formato *wide* para o formato *long*. O código utilizado para tal tarefa será anexado ao final deste documento. O conjunto de dados convertidos está disponível no link [DADOS_L2Q2_LONG.csv]().
+Os dados foram devidamente convertidos do formato *wide* para o formato *long*. O código utilizado para tal tarefa será anexado ao final deste documento. O conjunto de dados convertidos está disponível no link [DADOS_L2Q2_LONG.csv](https://github.com/csilv7/MULTIVARIATE_DATA_ANALYSIS/blob/main/MULTI%20II/LISTAS/LISTA%20II/DATASETS/DADOS_L2Q2_LONG.csv).
 
-## (b) Faça uma análise exploratória dos dados
+## (b) Faça uma análise exploratória dos dados {.unnumbered}
 
-## (c) Faça a verificação de pressupostos
+Como análise preliminar, foram construidas a @tbl-DescM1, @tbl-DescM2, @tbl-DescM3, @fig-boxplot e a @fig. Com o objetivo de identificar padrões que corroborem com os resultados inferenciais.
+
+```{r}
+#| tbl-cap: "Medidas de Resumo do Conjunto de Dados para o Método 1."
+#| label: tbl-DescM1
+
+# Medidas de Resumo
+meansures <- mvn(df.WIDE, subset = "Method")$Descriptives$M1
+meansures <- meansures[, -c(1, 9, 10)]
+
+# Formatação de Tabela
+knitr::kable(
+  meansures,
+  col.names = c("Média", "$S$", "Mediana", "Mín", "Máx", "1º Quartil", "3º Quartil"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Medidas de Resumo do Conjunto de Dados para o Método 2."
+#| label: tbl-DescM2
+
+# Medidas de Resumo
+meansures <- mvn(df.WIDE, subset = "Method")$Descriptives$M2
+meansures <- meansures[, -c(1, 9, 10)]
+
+# Formatação de Tabela
+knitr::kable(
+  meansures,
+  col.names = c("Média", "$S$", "Mediana", "Mín", "Máx", "1º Quartil", "3º Quartil"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Medidas de Resumo do Conjunto de Dados para o Método 3."
+#| label: tbl-DescM3
+
+# Medidas de Resumo
+meansures <- mvn(df.WIDE, subset = "Method")$Descriptives$M3
+meansures <- meansures[, -c(1, 9, 10)]
+
+# Formatação de Tabela
+knitr::kable(
+  meansures,
+  col.names = c("Média", "$S$", "Mediana", "Mín", "Máx", "1º Quartil", "3º Quartil"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+As @tbl-DescM1, @tbl-DescM2 e @tbl-DescM3 apresentam as medidas descritivas para os métodos 1, 2 e 3, respectivamente. A seguir, destacam-se algumas observações importantes:
+
+- O **Método 1** apresentou as maiores médias em praticamente todas as variáveis sensoriais, com destaque para **Sabor (5,7)** e **Umidade (6,0)**, sugerindo que esse método foi o mais bem avaliado pelos juízes.
+- O **Método 2** obteve médias intermediárias em todas as variáveis, com valores próximos aos do Método 1, porém ligeiramente menores.
+- O **Método 3** apresentou as **menores médias para Aroma (5,0)** e **Sabor (4,8)**, indicando avaliações sensoriais inferiores nesses atributos.
+- Em relação à variabilidade, os **desvios padrão** foram relativamente baixos em todos os métodos, indicando **baixa dispersão entre as observações**. O maior desvio padrão ocorreu para **Aroma no Método 2 (0,76)**.
+- As distribuições mostraram-se em geral **simétricas ou levemente assimétricas à esquerda**, e com curtose negativa na maioria dos casos, indicando distribuições levemente achatadas (platicúrticas).
+
+```{r}
+#| fig-cap: "Boxplot das Variávei do Conjunto de Dados Segmentadas pelo Método Aplicado."
+#| label: fig-boxplot
+
+ggplot(data = df.LONG, aes(x = VARIABLE, y = SCORE, color = Method)) +
+  geom_boxplot() +
+  labs(x = "Características", y = "Score", color = "Método") +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) +
+  theme_classic(base_size = 12)
+```
+
+A @fig-boxplot apresenta os boxplots das quatro variáveis segmentadas por método.
+
+- Para **Aroma** e **Sabor**, observa-se que o **Método 1 possui as maiores medianas** e menos dispersão, enquanto o **Método 3 apresenta as menores medianas**.
+- Na variável **Textura**, os três métodos apresentaram valores similares, com destaque para o **Método 3**, que apresentou uma leve vantagem em relação à mediana.
+- Na variável **Umidade**, as medianas foram próximas entre os métodos, com **Método 3** apresentando uma mediana ligeiramente superior.
+
+De modo geral, os boxplots indicam **vantagem do Método 1 nas variáveis Aroma e Sabor**, enquanto **Textura e Umidade** parecem menos discriminativas entre os métodos.
+
+```{r}
+#| fig-cap: "Pairplot do Conjunto de Dados Segmentadas pelo Método Aplicado."
+#| label: fig-pairplot
+
+# Salvar Dados em Formato Wide
+write.csv(df.WIDE, file = "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/DATASETS/DADOS_L2Q2_WIDE.csv", row.names = F)
+
+# Gerar Visualização
+GGally::ggpairs(df.WIDE, 
+                mapping = aes(colour = Method, alpha = 0.75), 
+                columns = colnames(df.WIDE)[1:4]) +
+  theme_minimal()
+```
+
+A @fig-pairplot apresenta o pairplot das variáveis sensoriais, com gráficos de dispersão e os respectivos coeficientes de correlação de Pearson.
+
+- De forma geral, observou-se **associação positiva** entre as variáveis, especialmente entre:
+  - **Aroma e Sabor (r = 0,730)**
+  - **Textura e Sabor (r = 0,668)**
+  - **Umidade e Textura (r = 0,418)**
+- Ao segmentar por método, notam-se correlações moderadas e significativas nos três grupos, com destaque para:
+  - **Método 1:** Aroma e Sabor (r = 0,595), Textura e Umidade (r = 0,742)
+  - **Método 2:** Aroma e Sabor (r = 0,820)
+  - **Método 3:** Aroma e Sabor (r = 0,779), Textura e Sabor (r = 0,651)
+
+Esses resultados indicam que os julgadores **avaliaram os atributos de forma coerente**, ou seja, peixes bem avaliados em um aspecto tendem a receber boas avaliações nos demais.
+
+## (c) Faça a verificação de pressupostos {.unnumbered}
+
+As suposições da Manova estão relacionadas à normalidade dos erros e igualdade das matrizes de covariância nas populações.
+
+```{r}
+#| tbl-cap: "Teste de Mardia para Normalidade Multivariada."
+#| label: tbl-MARDIA
+
+# Formatação de Tabela
+knitr::kable(
+  mardia.test$multivariateNormality,
+  col.names = c("Teste", "Estatística de Teste", "P-Valor", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Henze-Zirkler para Normalidade Multivariada."
+#| label: tbl-HZ
+
+# Formatação de Tabela
+knitr::kable(
+  hz.test$multivariateNormality,
+  col.names = c("Teste", "Estatística de Teste", "P-Valor", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Royston para Normalidade Multivariada."
+#| label: tbl-ROYSTON
+
+# Formatação de Tabela
+knitr::kable(
+  royston.test$multivariateNormality,
+  col.names = c("Teste", "Estatística de Teste", "P-Valor", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+De acordo com os dados das @tbl-MARDIA, @tbl-HZ e @tbl-ROYSTON os dados seguem uma distribuição normal multivariada. Agora, basta verificar se a Matriz de Covariância dos grupos são iguais (homogeneidade).
+
+```{r}
+#| tbl-cap: "Teste M de Box para Homogeneidade das Matrizes de Covariâncias."
+#| label: tbl-MBox
+
+# Formatação de Tabela
+knitr::kable(
+  x = data.frame(
+    statistic = boxM.test$statistic, df =  boxM.test$parameter, p = boxM.test$p.value,
+    row.names = NULL
+  ),
+  col.names = c("Estatística de Teste", "Graus de Liberdade", "P-Valor"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+Como o $p-valor > 0,05$, não se pode rejeitar a hipótese nula de homogeneidade das matrizes de convariâncias.
+
+## (d) Faça uma análise de variância multivariada usando todos os quatro testes da MANOVA a um fator para comparar os três métodos relativamente às variáveis estudadas {.unnumbered}
+
+```{r, echo=TRUE}
+# Testando a Hipótese Nula
+summary(manova.model, test = "Wilks")
+summary(manova.model, test = "Pillai")
+summary(manova.model, test = "Hotelling-Lawley")
+summary(manova.model, test = "Roy")
+```
+
+Todos os testes foram altamente significativos (***), sugerindoque existem diferenças significativas entre os métodos para pelo menos uma das variáveis.
+
+## e) Faça análise a posteriori se os testes multivariados rejeitarem a hipótese nula. Faça a conclusão da análise.
+
+```{r, echo=TRUE}
+# AROMA
+TukeyHSD(x = aov(AROMA ~ Method, data = df.WIDE), "Method", conf.level = 0.95)
+
+# SABOR
+TukeyHSD(x = aov(SABOR ~ Method, data = df.WIDE), "Method", conf.level = 0.95)
+
+# TEXTURA
+TukeyHSD(x = aov(TEXTURA ~ Method, data = df.WIDE), "Method", conf.level = 0.95)
+
+# UMIDADE
+TukeyHSD(x = aov(UMIDADE ~ Method, data = df.WIDE), "Method", conf.level = 0.95)
+```
+
+Após a análise a posteriori, verificou-se que os métodos aplicados só apresentaram diferênças no "SABOR" e "TEXTURA".
+
+# Códigos Utilizados
+
+Para ter acesso aos códigos utilizados, acesse o link [CODE UTILIZADO](https://github.com/csilv7/MULTIVARIATE_DATA_ANALYSIS/blob/main/MULTI%20II/LISTAS/LISTA%20II/CODES/CODE_L2_R.R).
 

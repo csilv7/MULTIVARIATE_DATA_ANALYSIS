@@ -1,0 +1,58 @@
+---
+title: "Análise Multivariada II"
+subtitle: "Lista II"
+author: "Breno Cauã Rodrigues da Silva"
+format:
+  pdf: 
+      pdf-engine: pdflatex
+      documentclass: article
+      number-sections: true
+      fig-pos: "H"
+      indent: true
+      header-includes: |
+        \input{TEX_AUX.tex}
+      fontsize: 11pt
+      geometry: [left=2cm, top=2cm, right=2cm, bottom=2cm]
+      echo: false
+      message: false
+      warning: false
+---
+
+```{r}
+options(OutDec = ",", decimal = 2)
+
+# Código Utilizado
+source("~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA II/CODES/CODE_L2_R.R")
+```
+
+```{=latex}
+\input{QUESTION_ONE.tex}
+```
+
+# Questão 2. MANOVA {.unnumbered}
+
+## (a) Converta o banco de dados para o formato longo
+
+Os dados foram devidamente convertidos do formato *wide* para o formato *long*. O código utilizado para tal tarefa será anexado ao final deste documento. O conjunto de dados convertidos está disponível no link [DADOS_L2Q2_LONG.csv](https://github.com/csilv7/MULTIVARIATE_DATA_ANALYSIS/blob/main/MULTI%20II/LISTAS/LISTA%20II/DATASETS/DADOS_L2Q2_LONG.csv).
+
+
+## (b) Faça uma análise exploratória dos dados {.unnumbered}
+
+Como análise preliminar, foram construidas a @tbl-Desc, @fig e a @fig. Com o objetivo de identificar padrões que corroborem com os resultados inferenciais.
+
+```{r}
+#| tbl-cap: "Medidas de Resumo do Conjunto de Dados em Análise."
+#| label: tbl-Desc
+
+# Formatação de Tabela
+knitr::kable(
+  mardia.test$Descriptives[, -1], 
+  col.names = c("Média", "Desv Padrão", "Mediana", "Mínimo", "Máximo", "1º Quartil", "3º Quartil", "Skew", "Curtose"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+## (c) Faça a verificação de pressupostos {.unnumbered}
+

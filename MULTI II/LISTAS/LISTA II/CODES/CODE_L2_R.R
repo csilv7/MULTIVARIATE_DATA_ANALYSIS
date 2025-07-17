@@ -1,9 +1,13 @@
 # --------------------------
 # [*] CONFIGURAÇÕES INICIAIS
 # --------------------------
+
+options(OutDec = ",", digits = 2)
+
 library(readxl)
 
 library(dplyr)
+library(tidyr)
 
 library(ggplot2)
 
