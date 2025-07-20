@@ -59,7 +59,7 @@ plot.histogram <- function(df) {
 # ---------------------
 
 # Caminho do arquivo
-path <- "C:/Users/user/Documents/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA I/DATASETS/df.csv"
+path <- "C:/Users/user/Documents/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA I/DATASETS/DADOS_LISTA_I.csv"
 
 # Leitura do arquivo
 df <- readr::read_csv(file = path)

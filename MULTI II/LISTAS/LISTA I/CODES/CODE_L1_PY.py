@@ -19,4 +19,4 @@ df = pd.concat([d1, d2], ignore_index=True)
 df.columns = ["S1", "S2", "S3", "condition"]
 
 # Salvar Conjunto de Dados ajustados
-df.to_csv("C:/Users/user/Documents/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA I/DATASETS/df.csv", index=False)
+df.to_csv("C:/Users/user/Documents/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA I/DATASETS/DADOS_LISTA_I.csv", index=False)

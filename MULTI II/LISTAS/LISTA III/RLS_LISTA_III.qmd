@@ -1,0 +1,498 @@
+---
+title: "Análise Multivariada II"
+subtitle: "Lista III"
+author: "Breno Cauã Rodrigues da Silva"
+format:
+  pdf:
+    pdf-engine: lualatex
+    documentclass: article
+    number-sections: true
+    fig-pos: "H"
+    dpi: 600
+    indent: true
+    header-includes: |
+      \usepackage{indentfirst}
+    fontsize: 11pt
+    geometry: [left=2cm, top=2cm, right=2cm, bottom=2cm]
+    echo: false
+    message: false
+    warning: false
+    
+lang: pt
+#https://rdrr.io/github/rstudio/tinytex/man/tlmgr.html
+---
+
+# Análise de Variância Multivariada a 2 Fatores (MANOVA Two Way)
+
+```{r}
+#| label: Configurações Iniciais do R
+
+options(OutDec = ",")
+
+library(readxl)
+
+library(gt)
+
+library(dplyr)
+library(tidyr)
+
+library(ggplot2)
+
+# Caminho do arquivo
+path <- "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA III/DATASETS/DADOS_LISTA_III.xlsx"
+
+# Leitura do arquivo
+df.L3 <- read_excel(path) %>%
+  mutate(
+    S = factor(S, labels = c("S1", "S2", "S3", "S4"), levels = c(1, 2, 3, 4)),
+    V = factor(V, labels = c("V1", "V2", "V3"), levels = c(1, 2, 3))
+  )
+```
+
+
+## Introdução
+
+Neste relatório realiza-se a análise dos dados de feijão-vagem utilizando uma análise de variância multivariada a dois fatores (MANOVA Two Way). Os fatores de interesse são:
+
+- **S:** Data de semeadura (níveis 1 a 4);
+- **V:** Variedade (níveis 1 a 3).
+
+\noindent As variáveis dependentes são:
+
+- `y1`: Precocidade do Rendimento;
+- `y2`: Precocidade da Área Foliar Específica (SLA);
+- `y3`: Rendimento Total;
+- `y4`: SLA Médio.
+
+\noindent Cada combinação de níveis de `S` e `V` possui 5 repetições, totalizando 60 observações.
+
+## Análise Exploratória de Dados
+
+Análise exploratória foi feita por medidas de resumo - média e desvio padrão - juntamente de gráficos com o objetivo de evidenciar, caso exista, diferênças entre os fatores ainda na etapa de análise descritiva.
+
+A @tbl-MRes apresenta as medidas de resumo para cada combinação entre os fatores e, para cada uma das variáveis $y_{1}$, $y_{2}$, $y_{3}$ e $y_{4}$ foi calculada a média e o desvio padrão. Os valores que mais chamam atenção na @tbl-MRes são os da variável $y_{4}$, apresentando médias distantes uma das outras a depender da iteração dos fatores.
+
+```{r}
+#| tbl-cap: "Medidas de Resumo das Variáveis em Análise segmentadas pelos Fatores."
+#| label: tbl-MRes
+
+# Medidas de Resumo
+df.L3 %>%
+  group_by(S, V) %>%
+  summarise(across(y1:y4, list(MEDIA = mean, SD = sd))) %>%
+  gt() |>
+  tab_spanner(
+    label = md("$y_{1}$"),
+    columns = c(y1_MEDIA, y1_SD)
+  ) |>
+  tab_spanner(
+    label = md("$y_{2}$"),
+    columns = c(y2_MEDIA, y2_SD)
+  ) |> 
+  tab_spanner(
+    label = md("$y_{3}$"),
+    columns = c(y3_MEDIA, y3_SD)
+  ) |>
+  tab_spanner(
+    label = md("$y_{4}$"),
+    columns = c(y4_MEDIA, y4_SD)
+  ) |>
+  cols_label(
+    y1_MEDIA = html("Média"), y1_SD = html("DP"),
+    y2_MEDIA = html("Média"), y2_SD = html("DP"),
+    y3_MEDIA = html("Média"), y3_SD = html("DP"),
+    y4_MEDIA = html("Média"), y4_SD = html("DP")
+  ) |>
+  tab_source_note(
+    source_note = "DP: Desvio Padrão."
+  )
+```
+
+Uma visualização proposta e muito eficaz na comparação de dados como os que esstão sendo analisados é o gráfico de caixa, mais conhecido como *boxplot*. Tal visualização foi desenhada na @fig-Boxplot.
+
+```{r}
+#| fig-cap: "Boxplot das Variáveis Segmentadas pelos Fatores."
+#| fig-subcap: 
+#| - "Precocidade do Rendimento ($y_1$)"
+#| - "Precocidade da SLA ($y_2$)"
+#| - "Rendimento Total ($y_3$)"
+#| - "SLA Médio ($y_4$)"
+#| label: fig-Boxplot
+#| layout-ncol: 2
+#| layout-nrow: 2
+#| fig-dpi: 600
+
+# Boxplot (y1)
+df.L3 %>%
+  ggplot(aes(x = S, y = y1, color = V)) +
+  geom_boxplot() +
+  labs(x = "Data de Semeadura", y = "Precocidade do Rendimento", color = "Variedade") +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Boxplot (y2)
+df.L3 %>%
+  ggplot(aes(x = S, y = y2, color = V)) +
+  geom_boxplot() +
+  labs(x = "Data de Semeadura", y = "Precocidade da SLA", color = "Variedade") +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Boxplot (y3)
+df.L3 %>%
+  ggplot(aes(x = S, y = y3, color = V)) +
+  geom_boxplot() +
+  labs(x = "Data de Semeadura", y = "Rendimento Total", color = "Variedade") +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Boxplot (y4)
+df.L3 %>%
+  ggplot(aes(x = S, y = y3, color = V)) +
+  geom_boxplot() +
+  labs(x = "Data de Semeadura", y = "SLA Médio", color = "Variedade") +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+```
+
+## Teste a interação e efeitos principais usando as quatro estatísticas de teste da MANOVA a 2 Fatores
+
+A @tbl-RMANOVA apresenta os resultados obtidos para cada teste realizado. São apresentados os graus de liberdade, Estatística, F aproximado e o nível descritivo de cada teste.
+
+```{r}
+#| tbl-cap: "Análise de Variància Multivariada a 2 Fatores."
+#| label: tbl-RMANOVA
+
+# Formatar a Tabela de Resultados
+rls.manova <- tribble(
+    ~Teste, ~Efeito, ~GL, ~Estatística, ~F, ~Num_DF, ~Den_DF, ~`Valor-p`, ~Signif,
+    "Wilks", "S", 3, 0.000623, 151.94, 12, 119.35, "< 2,2e-16", "***",
+    "Wilks", "V", 3, 0.065574, 32.682, 6, 96, "< 2,2e-16", "***",
+    "Wilks", "S:V", 6, 0.135002, 5.111, 24, 158.20, "1,076e-10", "***",
+    "Pillai", "S", 3, 2.3594, 43.28, 12, 141, "< 2,2e-16", "***",
+    "Pillai", "V", 3, 1.1036, 14.157, 8, 92, "9,032e-13", "***",
+    "Pillai", "S:V", 6, 1.3338, 4.002, 24, 192, "2,757e-08", "***",
+    "Hotelling", "S", 3, 146.107, 531.67, 12, 131, "< 2,2e-16", "***",
+    "Hotelling", "V", 3, 11.670, 64.19, 8, 88, "< 2,2e-16", "***",
+    "Hotelling", "S:V", 6, 3.501, 6.35, 24, 174, "5,244e-14", "***",
+    "Roy", "S", 3, 140.943, 1656.08, 4, 47, "< 2,2e-16", "***",
+    "Roy", "V", 3, 10.251, 121.45, 4, 28, "< 2,2e-16", "***",
+    "Roy", "S:V", 6, 2.686, 41.20, 6, 48, "4,496e-12", "***"
+  )
+
+# Ajustando a Formatação da Tabela
+rls.manova |>
+  gt(groupname_col = "Teste") |>
+  cols_label(
+    Efeito = "Efeito",
+    GL = md("$gl$"),
+    Estatística = "Estatística",
+    F = md("F $\\approx$"),
+    Num_DF = md("$gl_{\\text{num}}$"),
+    Den_DF = md("$gl_{\\text{den}}$"),
+    `Valor-p` = md("Valor $p$"),
+    Signif = "Signif."
+  ) |>
+  tab_source_note(
+    source_note = md("Para $\\alpha = 0$: '`***`'; $\\alpha = 0.001$: '`**`'; $\\alpha = 0.01$: '`*`'; $\\alpha = 0.05$: '`.`'.")
+  )
+```
+
+## Faça a análise descrevendo a metodologia, procedimentos e conclusão.
+
+Para investigar se há diferenças significativas nas variáveis-resposta multivariadas entre os níveis dos fatores considerados, foi utilizada a Análise Multivariada da Variância (MANOVA). Esta técnica é apropriada quando se deseja avaliar o efeito de variáveis independentes categóricas sobre múltiplas variáveis dependentes quantitativas de forma conjunta, levando em consideração a correlação entre elas.
+
+Neste estudo, foram considerados dois fatores principais, denominados `S` e `V`, além da interação entre eles (`S:V`). As variáveis-resposta foram avaliadas simultaneamente, e a hipótese nula testada para cada fator/interação foi a de que não há diferença significativa nas médias vetoriais das variáveis-resposta entre os grupos.
+
+
+O modelo base da MANOVA é expresso por:  $$\text{Y}_{kri} = \mu + S_{k} + V_{r} + (S \times V)_{kr} + \varepsilon_{kri},$$ foi conduzida com base em quatro estatísticas multivariadas clássicas:
+
+* **Wilks' Lambda**
+* **Pillai’s Trace**
+* **Hotelling–Lawley Trace**
+* **Roy’s Largest Root**
+
+Esses testes avaliam a razão da variabilidade explicada pelo modelo em relação à variabilidade residual, considerando a estrutura multivariada dos dados. Para cada teste, foram avaliadas as estatísticas correspondentes, graus de liberdade, valores de F aproximados e respectivos valores-p.
+
+A análise foi conduzida no ambiente R, com os resultados organizados em tabela e formatados com o pacote `gt`. A significância estatística foi constatada perante um $\alpha = 0,05$ (5%).
+
+Com base nos resultados obtidos por todos os testes (Wilks, Pillai, Hotelling e Roy), observou-se que:
+
+* **O fator `S` apresentou efeito altamente significativo sobre o conjunto das variáveis-resposta**, com valores-p inferiores a 0.001 em todos os testes. Isso indica que as médias vetoriais diferem entre os níveis de `S`.
+
+* **O fator `V` também apresentou efeito significativo**, com valores-p inferiores a 0.001 nos quatro testes, indicando diferenças entre os níveis de `V` sobre as variáveis-resposta.
+
+* **A interação `S:V` foi igualmente significativa**, sugerindo que o efeito combinado dos fatores altera de forma significativa a distribuição conjunta das variáveis-resposta.
+
+Dessa forma, há evidências estatísticas fortes de que tanto os fatores principais quanto sua interação afetam significativamente o comportamento multivariado das variáveis dependentes analisadas.
+
+# Análise de Componentes Principais (ACP) em Dados de Heptatlo Feminino
+
+## Primeiros Passos - Leitura, Ajuste e Visualizações Primárias
+
+```{r}
+#| label: Primeiros Passos - ACP
+
+# -------------------------------------
+# [2] ANÁLISE DE COMPONENTES PRINCIPAIS
+# -------------------------------------
+
+library(HSAUR)
+
+library(FactoMineR)
+library(factoextra)
+
+# -----------------------
+# [2.1] CARREGAR OS DADOS
+# -----------------------
+
+# Carrgar Dados
+df.PCA <- heptathlon
+```
+
+
+A Análise de Componentes Principais (PCA) foi utilizada com o objetivo de explorar a estrutura multivariada dos dados do heptatlo feminino. Inicialmente, foi realizada a transformação das variáveis de tempo (`hurdles`, `run200m` e `run800m`), uma vez que, nessas provas, menores valores indicam melhor desempenho. A transformação consistiu em subtrair os tempos originais do maior tempo registrado, mantendo a coerência de interpretação com as demais variáveis (onde valores maiores são melhores).
+
+```{r}
+#| label: Tranformações no Dataset - ACP
+# --------------------------------
+# [2.2] TRANSFORMAÇÃO DE VARIÁVEIS
+# --------------------------------
+df.PCA.modif <- df.PCA %>%
+  mutate(
+    hurdles = max(hurdles) - hurdles,
+    run200m = max(run200m) - run200m,
+    run800m = max(run800m) - run800m
+  )
+
+df.PCA.modif <- scale(df.PCA.modif)
+```
+
+Em seguida, os dados foram padronizados e submetidos à PCA. A matriz de correlação revelou padrões interessantes entre as variáveis. Foi possível observar correlações positivas entre algumas variáveis atléticas como `longjump`, `shot` e `javelin`, indicando um possível grupo de atletas com perfil mais técnico de força e explosão. Variáveis como `run800m` e `hurdles` apresentaram correlações distintas, sugerindo que podem representar outros aspectos do desempenho físico, como resistência e velocidade. Vejamos a @fig-HEATMAPMATCORR.
+
+```{r}
+#| fig-cap: "Mapa de Calor da Matriz de Correlação Linear de Perason."
+#| fig-width: 10
+#| fig-height: 4
+#| label: fig-HEATMAPMATCORR
+
+# --------------------------
+# [2.3] MATRIX DE CORRELAÇÃO
+# --------------------------
+
+# Matriz de Correlação
+corr.matrix <- cor(df.PCA)
+
+# Mapa de Calor
+corrplot::corrplot(
+  corr.matrix, 
+  method = "color", addCoef.col = "green", tl.col = "black",
+  number.digits = 2, number.font = 0.01
+)
+```
+
+Após isso, foi aplicada, de fato, a análise de componentes principais.
+
+## Gráficos de Apoio
+
+```{r}
+#| label: Aplicação - ACP
+
+# ---------------------------------------
+# [2.4] ANÁLISE DE COMPONENTES PRINCIPAIS
+# ---------------------------------------
+
+# Criando objeto PCA
+model.PCA <- PCA(df.PCA.modif, graph = FALSE)
+```
+
+Após a aplicação, a @fig-SCREEPLOT mostra o primeiro gráfico a ser analisado. Gráfico de Autovalores ou, popularmente *Scree Plot*, nos fornece um método para determinar o número de componentes principais.
+
+```{r}
+#| fig-cap: "Gráfico de Autovalores."
+#| label: fig-SCREEPLOT
+
+# -----------------------------------
+# [2.4.1] ANÁLISE GRÁFICA: SCREE PLOT
+# -----------------------------------
+
+# Percentual de Variância
+percent.of.var <- (model.PCA$svd$vs^2 / sum(model.PCA$svd$vs^2)) * 100
+axis.X.scree <- 1:length(percent.of.var)
+
+ggplot(data = NULL, aes(x = axis.X.scree, y = percent.of.var)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_line(color = "red") + geom_point(color = "red") +
+  geom_text(
+    aes(label = paste0(round(percent.of.var, 2), "%")),
+    vjust = -0.5,
+    hjust = -0.1,
+    angle = 25,
+    size = 2,
+    fontface = "bold",
+    color = "black"
+  ) + 
+  ylim(0, 70) +
+  labs(x = "Dimensão", y = "Percentual de Variância Explicada") +
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) +
+  scale_x_continuous(breaks = axis.X.scree)
+```
+
+Também, foi desenhada a @fig-BIPLOT, que apresenta o *biplot* - visualização que sobrepõe o gráfico de indivíduos e o gráfico de cargas fatoriais. Usado para avaliar a estrutura dos dados e as cargas fatoriais dos primeiros dois componentes em um gráfico.
+
+```{r}
+#| fig-cap: "Biplot dos Componentes Principais 1 e 2."
+#| fig-width: 6
+#| fig-height: 4
+#| label: fig-BIPLOT
+
+# -------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: BIPLOT
+# -------------------------------
+
+# Obter os Loadings
+var.coords <- as.data.frame(model.PCA$var$coord)
+
+# Obter os Dados Indivíduais (Atletas)
+ind.coords <- as.data.frame(model.PCA$ind$coord)
+
+# Ajustar o nome das colunas
+colnames(var.coords) <- colnames(ind.coords) <- paste("Dimensão", 1:ncol(var.coords))
+
+# Coluna "score" para Colorir Pontos (Perfumaria)
+ind.coords$Score <- df.PCA$score[match(rownames(ind.coords), rownames(df.PCA))]
+
+# Fator de Escala
+f.scale <- 3
+
+# Biplot
+ggplot() +
+  # Linhas de Referência (x = 0, y = 0)
+  geom_vline(xintercept = 0, linetype = "dotted", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
+  
+  # Indicíduos (Atletas)
+  geom_point(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`),
+    size = 3, alpha = 0.8
+  ) +
+  
+  # Adicionar os Rótulos dos Atletas (opcional, pode deixar o gráfico carregado)
+  geom_text(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`, label = 1:nrow(ind.coords)),
+    vjust = -1, hjust = 0.5, size = 1.95, color = "black"
+  ) +
+  
+  # Traçar Setas a partir da Origem
+  geom_segment(
+    data = var.coords, aes(xend = f.scale * `Dimensão 1`, yend = f.scale * `Dimensão 2`, x = 0, y = 0),
+    arrow = arrow(length = unit(0.025, "npc")),
+    color = "blue", linewidth = 0.8
+  ) +
+  
+  # Adicionar os nomes das variáveis
+  geom_text(
+    data = var.coords, 
+    aes(x = `Dimensão 1` * f.scale * 1.1, y = `Dimensão 2` * f.scale * 1.1, label = row.names(var.coords)),
+    color = "blue", size = 4
+  ) +
+  # Títulos e rótulos
+  labs(
+    x = paste0("Dimensão 1 (", round(percent.of.var[1], 2), "%)"),
+    y = paste0("Dimensão 2 (", round(percent.of.var[2], 2), "%)")
+  ) +
+  
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) + coord_fixed(ratio = 1)
+```
+
+Por fim, foi construída a @fig-CONTRIB. Este gráfico mostra as variáveis que são mais correlacionadas com o CP$_{1}$ e CP$_{2}$ são as mais importantes para explicar a variabilidade dos dados. As variáveis que não são correlacionadas com nenhum CP ou correlacionadas com as últimas dimensões (últimos CP’s) são variáveis com baixa contribuições e candidatas a serem removidas para simplificar a análise.
+
+```{r}
+#| fig-cap: "Gráfico de Contribuições das Variáveis nos Componentes Pricipais."
+#| label: fig-CONTRIB
+
+# -------------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: CONTRIBUIÇÃO
+# -------------------------------------
+
+# Obter Dados de Contribuição das Variáveis
+var.contrib <- as.data.frame(model.PCA$var$contrib)
+
+# Ajustar o nome das colunas
+colnames(var.contrib) <- 1:5 # paste("Dimensão", 1:ncol(var.contrib))
+
+# Ajustando Dados para o ggplot2 (Formato Long)
+var.contrib.LONG <- var.contrib %>%
+  tibble::rownames_to_column(var = "Variable") %>%
+  pivot_longer(
+    cols = "1":"5",
+    names_to = "Component",
+    values_to = "Contribution"
+  )
+
+# Gerar gráfico
+ggplot(
+  data = var.contrib.LONG, 
+  aes(x = Component, y = Variable, size = Contribution, fill = Contribution)
+) +
+  # Contribuição
+  geom_point(shape = 21) + 
+  scale_size_continuous(range = c(0, 10)) +
+  scale_fill_gradientn(
+    colours = c("lightblue", "skyblue", "royalblue", "blue", "darkblue"),
+    values = scales::rescale(c(0, 25, 50, 75, 100))  # ajusta para sua escala de contribuição
+  ) +
+  # Rótulos
+  labs(x = "Dimensão", y = "Variável", size = "Contribuição (%)", fill = "Contribuição (%)") +
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
+```
+
+## Conclusão da Análise de Componentes Principais
+
+A Análise de Componentes Principais (ACP) aplicada aos dados do heptatlo feminino teve como objetivo explorar a estrutura de correlações entre variáveis de desempenho atlético e verificar como os escores das componentes se relacionam com a pontuação geral (`score`). A transformação das variáveis de tempo (`hurdles`, `run200m`, `run800m`) foi uma etapa essencial para alinhar a direção da interpretação — maiores valores sempre indicando melhor desempenho. Após a padronização, a ACP foi executada considerando as correlações entre as variáveis.
+
+A matriz de correlação revelou dois grupos principais de variáveis:
+
+* Um primeiro grupo composto por variáveis de potência/explosão, como `shot`, `longjump` e `highjump`, que apresentaram **forte correlação entre si**;
+* Um segundo grupo mais voltado à resistência e velocidade, representado por `run800m`, `hurdles` e `run200m`, o qual mostrou **correlação negativa com o grupo anterior**, refletindo a natureza multidimensional do desempenho atlético.
+
+O **scree plot** indicou que as **duas primeiras componentes principais explicam juntas cerca de 83% da variância total**, sendo a **Dimensão 1** (aproximadamente 68%) fortemente associada à variabilidade geral do desempenho técnico. A **Dimensão 2**, responsável por cerca de 15% da variância, representa aspectos secundários, mas ainda relevantes, ligados a atributos específicos.
+
+O **biplot**, que tem como um de seus objetivos apresentar as **cargas fatoriais**, evidenciou nitidamente o agrupamento de algumas variáveis. Pode-se notar que todas as variáveis exercem influência na Dimensão 1, porém, com bem menos influência da variável `javelin`. Em contrpartida, as variáveis `highjump`, `run800m`, `hurdles` e `longjump` são mais influentes.
+
+O **biplot** também mostra que grande parte das observações estou centradas. Talvez, com mais rigidez, possamos dizer que a amostra 1 possa ser um *outlier*, pois está mais distante da maioria. Entretanto, sem fazer muito esforço pode-se idetificar que a observação 25 pode ser problemática, já que a sua distância perante as demais observações é bastante evidente.
+
+O **gráfico das contribuições das variáveis** também trouxe um panorama claro: variáveis como `score`, `longjump` e `hurdles` foram as que **mais contribuíram para a formação da Dimensão 1**, enquanto `javelin` é a que contribuí significativamente para a Dimensão 2, reforçando a dualidade técnica da estrutura dos dados.
+
+# Para Dados de Progênies de Eucalyptus sp
+
