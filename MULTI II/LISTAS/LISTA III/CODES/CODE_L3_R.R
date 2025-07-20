@@ -399,3 +399,227 @@ ggplot(
     axis.title.x = element_text(face = "bold"),
     axis.title.y = element_text(face = "bold")
   )
+
+# ---------------------------------------------------------------------------
+# [3] ANÁLISE DE COMPONENTES PRINCIPAIS - Dados de Progênies de Eucalyptus sp
+# ---------------------------------------------------------------------------
+
+# --------------------
+# [3.1] CARREGAR DADOS
+# --------------------
+
+# Caminho do arquivo
+path <- "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA III/DATASETS/DADOS_LISTA_III.xlsx"
+
+# Leitura do arquivo
+df.ACP.Q3 <- read_excel(path, sheet = "Q3_ACP")
+
+# --------------------------------
+# [3.2] TRANSFORMAÇÃO DE VARIÁVEIS
+# --------------------------------
+df.ACP.Q3.modif <- scale(df.ACP.Q3) # Padronizando
+
+# --------------------------
+# [3.3] MATRIX DE CORRELAÇÃO
+# --------------------------
+
+# Matriz de Correlação
+corr.matrix <- cor(df.ACP.Q3)
+
+# Mapa de Calor
+corrplot::corrplot(
+  corr.matrix, 
+  method = "color", addCoef.col = "red", tl.col = "black",
+  number.digits = 2, number.font = 2, number.cex = 0.75
+)
+
+# ---------------------------------------
+# [3.4] ANÁLISE DE COMPONENTES PRINCIPAIS
+# ---------------------------------------
+
+# Criando objeto PCA
+model.PCA.Q3 <- PCA(df.ACP.Q3.modif, graph = FALSE)
+
+# -----------------------------------
+# [3.4.1] ANÁLISE GRÁFICA: SCREE PLOT
+# -----------------------------------
+
+# Percentual de Variância
+percent.of.var <- (model.PCA.Q3$svd$vs^2 / sum(model.PCA.Q3$svd$vs^2)) * 100
+axis.X.scree <- 1:length(percent.of.var)
+
+# Scree Plot
+ggplot(data = NULL, aes(x = axis.X.scree, y = percent.of.var)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_line(color = "red") + geom_point(color = "red") +
+  geom_text(
+    aes(label = paste0(round(percent.of.var, 2), "%")),
+    vjust = -0.5,
+    hjust = -0.1,
+    angle = 25,
+    size = 2,
+    fontface = "bold",
+    color = "black"
+  ) + 
+  ylim(0, 70) +
+  labs(x = "Dimensão", y = "Percentual de Variância Explicada") +
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) +
+  scale_x_continuous(breaks = axis.X.scree)
+
+# -----------------------------------------
+# [2.4.2] ANÁLISE GRÁFICA: CARGAS FATORIAIS
+# -----------------------------------------
+
+# Obter Dados
+var.coords <- as.data.frame(model.PCA.Q3$var$coord)
+
+# Ajustar o nome das colunas
+colnames(var.coords) <- paste("Dimensão", 1:ncol(var.coords))
+
+# Plot de Cargas Fatoriais
+ggplot(data = var.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`)) +
+  
+  # Adicionar o Círculo de Corrlação Unitário (r = 1)
+  annotate(
+    "path",
+    x = cos(seq(0, 2 * pi, length.out = 100)),
+    y = sin(seq(0, 2 * pi, length.out = 100)),
+    color = "black", linetype = "dashed"
+  ) +
+  
+  # Linhas de Referência (x = 0, y = 0)
+  geom_vline(xintercept = 0, linetype = "dotted", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
+  
+  # Traçar Setas a partir da Origem
+  geom_segment(
+    aes(xend = `Dimensão 1`, yend = `Dimensão 2`, x = 0, y = 0),
+    arrow = arrow(length = unit(0.01, "npc")),
+    color = "blue", linewidth = 0.8
+  ) +
+  
+  # Adicionar os nomes das variáveis
+  geom_text(
+    data = var.coords, 
+    aes(x = `Dimensão 1` * 1.1, y = `Dimensão 2` * 1.1, label = row.names(var.coords)),
+    color = "black", size = 3, #vjust = 1.5, hjust = 0.5
+  ) +
+  
+  # Definir proporção de aspecto fixa (círculo parecerá um círculo)
+  coord_fixed(ratio = 1) +
+  # Ajustar limites dos eixos para incluir o círculo unitário e as setas
+  xlim(-1.1, 1.1) +
+  ylim(-1.1, 1.1) +
+  labs(
+    x = paste0("Dimensão 1 (", round(percent.of.var[1], 2), "%)"),
+    y = paste0("Dimensão 2 (", round(percent.of.var[2], 2), "%)")
+  ) +
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
+
+# -------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: BIPLOT
+# -------------------------------
+
+# Obter os Loadings
+var.coords <- as.data.frame(model.PCA.Q3$var$coord)
+
+# Obter os Dados Indivíduais (Atletas)
+ind.coords <- as.data.frame(model.PCA.Q3$ind$coord)
+
+# Ajustar o nome das colunas
+colnames(var.coords) <- colnames(ind.coords) <- paste("Dimensão", 1:ncol(var.coords))
+
+# Fator de Escala
+f.scale <- 3
+
+# Biplot
+ggplot() +
+  # Linhas de Referência (x = 0, y = 0)
+  geom_vline(xintercept = 0, linetype = "dotted", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
+  
+  # Indicíduos (Atletas)
+  geom_point(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`),
+    size = 3, alpha = 0.8
+  ) +
+  
+  # Adicionar os Rótulos dos Atletas (opcional, pode deixar o gráfico carregado)
+  geom_text(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`, label = 1:nrow(ind.coords)),
+    vjust = -1, hjust = 0.5, size = 3, color = "black"
+  ) +
+  
+  # Traçar Setas a partir da Origem
+  geom_segment(
+    data = var.coords, aes(xend = f.scale * `Dimensão 1`, yend = f.scale * `Dimensão 2`, x = 0, y = 0),
+    arrow = arrow(length = unit(0.025, "npc")),
+    color = "blue", linewidth = 0.8
+  ) +
+  
+  # Adicionar os nomes das variáveis
+  geom_text(
+    data = var.coords, 
+    aes(x = `Dimensão 1` * f.scale * 1.1, y = `Dimensão 2` * f.scale * 1.1, label = row.names(var.coords)),
+    color = "blue", size = 4
+  ) +
+  # Títulos e rótulos
+  labs(
+    x = paste0("Dimensão 1 (", round(percent.of.var[1], 2), "%)"),
+    y = paste0("Dimensão 2 (", round(percent.of.var[2], 2), "%)")
+  ) +
+  
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) + coord_fixed(ratio = 1)
+
+# -------------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: CONTRIBUIÇÃO
+# -------------------------------------
+
+# Obter Dados de Contribuição das Variáveis
+var.contrib <- as.data.frame(model.PCA.Q3$var$contrib)
+
+# Ajustar o nome das colunas
+colnames(var.contrib) <- 1:5 # paste("Dimensão", 1:ncol(var.contrib))
+
+# Ajustando Dados para o ggplot2 (Formato Long)
+var.contrib.LONG <- var.contrib %>%
+  tibble::rownames_to_column(var = "Variable") %>%
+  pivot_longer(
+    cols = "1":"5",
+    names_to = "Component",
+    values_to = "Contribution"
+  )
+
+# Gerar gráfico
+ggplot(
+  data = var.contrib.LONG, 
+  aes(x = Component, y = Variable, size = Contribution, fill = Contribution)
+) +
+  # Contribuição
+  geom_point(shape = 21) + 
+  scale_size_continuous(range = c(0, 10)) +
+  scale_fill_gradientn(
+    colours = c("lightblue", "skyblue", "royalblue", "blue", "darkblue"),
+    values = scales::rescale(c(0, 25, 50, 75, 100))  # ajusta para sua escala de contribuição
+  ) +
+  # Rótulos
+  labs(x = "Dimensão", y = "Variável", size = "Contribuição (%)", fill = "Contribuição (%)") +
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )

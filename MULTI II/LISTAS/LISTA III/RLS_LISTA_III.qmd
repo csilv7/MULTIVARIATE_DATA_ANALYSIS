@@ -496,3 +496,212 @@ O **gráfico das contribuições das variáveis** também trouxe um panorama cla
 
 # Para Dados de Progênies de Eucalyptus sp
 
+## Primeiros Passos - Leitura, Ajuste e Visualizações Primárias
+
+```{r}
+#| fig-cap: "Mapa de Calor da Matriz de Correlação Linear de Perason para os Dados da Questão 3."
+#| label: fig-HEATMAPMATCORR_Q3
+
+# ---------------------------------------------------------------------------
+# [3] ANÁLISE DE COMPONENTES PRINCIPAIS - Dados de Progênies de Eucalyptus sp
+# ---------------------------------------------------------------------------
+
+# --------------------
+# [3.1] CARREGAR DADOS
+# --------------------
+
+# Caminho do arquivo
+path <- "~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II/LISTAS/LISTA III/DATASETS/DADOS_LISTA_III.xlsx"
+
+# Leitura do arquivo
+df.ACP.Q3 <- read_excel(path, sheet = "Q3_ACP")
+
+# --------------------------------
+# [3.2] TRANSFORMAÇÃO DE VARIÁVEIS
+# --------------------------------
+df.ACP.Q3.modif <- scale(df.ACP.Q3) # Padronizando
+
+# --------------------------
+# [3.3] MATRIX DE CORRELAÇÃO
+# --------------------------
+
+# Matriz de Correlação
+corr.matrix <- cor(df.ACP.Q3)
+
+# Mapa de Calor
+corrplot::corrplot(
+  corr.matrix, 
+  method = "color", addCoef.col = "red", tl.col = "black",
+  number.digits = 2, number.font = 2, number.cex = 0.75
+)
+```
+
+## Gráficos de Apoio
+
+```{r}
+#| label: Aplicação - Q3 - ACP
+
+# ---------------------------------------
+# [3.4] ANÁLISE DE COMPONENTES PRINCIPAIS
+# ---------------------------------------
+
+# Criando objeto PCA
+model.PCA.Q3 <- PCA(df.ACP.Q3.modif, graph = FALSE)
+```
+
+Após a aplicação, a @fig-SCREEPLOT mostra o primeiro gráfico a ser analisado. Gráfico de Autovalores ou, popularmente *Scree Plot*, nos fornece um método para determinar o número de componentes principais.
+
+```{r}
+#| fig-cap: "Gráfico de Autovalores."
+#| label: fig-SCREEPLOT_Q3
+
+# -----------------------------------
+# [3.4.1] ANÁLISE GRÁFICA: SCREE PLOT
+# -----------------------------------
+
+# Percentual de Variância
+percent.of.var <- (model.PCA.Q3$svd$vs^2 / sum(model.PCA.Q3$svd$vs^2)) * 100
+axis.X.scree <- 1:length(percent.of.var)
+
+# Scree Plot
+ggplot(data = NULL, aes(x = axis.X.scree, y = percent.of.var)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_line(color = "red") + geom_point(color = "red") +
+  geom_text(
+    aes(label = paste0(round(percent.of.var, 2), "%")),
+    vjust = -0.5,
+    hjust = -0.1,
+    angle = 25,
+    size = 2,
+    fontface = "bold",
+    color = "black"
+  ) + 
+  ylim(0, 70) +
+  labs(x = "Dimensão", y = "Percentual de Variância Explicada") +
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) +
+  scale_x_continuous(breaks = axis.X.scree)
+```
+
+Também, foi desenhada a @fig-BIPLOT, que apresenta o *biplot* - visualização que sobrepõe o gráfico de indivíduos e o gráfico de cargas fatoriais. Usado para avaliar a estrutura dos dados e as cargas fatoriais dos primeiros dois componentes em um gráfico.
+
+```{r}
+#| fig-cap: "Biplot dos Componentes Principais 1 e 2."
+#| fig-width: 6
+#| fig-height: 4
+#| label: fig-BIPLOT_Q3
+
+# -------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: BIPLOT
+# -------------------------------
+
+# Obter os Loadings
+var.coords <- as.data.frame(model.PCA.Q3$var$coord)
+
+# Obter os Dados Indivíduais (Atletas)
+ind.coords <- as.data.frame(model.PCA.Q3$ind$coord)
+
+# Ajustar o nome das colunas
+colnames(var.coords) <- colnames(ind.coords) <- paste("Dimensão", 1:ncol(var.coords))
+
+# Fator de Escala
+f.scale <- 3
+
+# Biplot
+ggplot() +
+  # Linhas de Referência (x = 0, y = 0)
+  geom_vline(xintercept = 0, linetype = "dotted", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dotted", color = "black") +
+  
+  # Indicíduos (Atletas)
+  geom_point(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`),
+    size = 3, alpha = 0.8
+  ) +
+  
+  # Adicionar os Rótulos dos Atletas (opcional, pode deixar o gráfico carregado)
+  geom_text(
+    data = ind.coords, aes(x = `Dimensão 1`, y = `Dimensão 2`, label = 1:nrow(ind.coords)),
+    vjust = -1, hjust = 0.5, size = 3, color = "black"
+  ) +
+  
+  # Traçar Setas a partir da Origem
+  geom_segment(
+    data = var.coords, aes(xend = f.scale * `Dimensão 1`, yend = f.scale * `Dimensão 2`, x = 0, y = 0),
+    arrow = arrow(length = unit(0.025, "npc")),
+    color = "blue", linewidth = 0.8
+  ) +
+  
+  # Adicionar os nomes das variáveis
+  geom_text(
+    data = var.coords, 
+    aes(x = `Dimensão 1` * f.scale * 1.1, y = `Dimensão 2` * f.scale * 1.1, label = row.names(var.coords)),
+    color = "blue", size = 4
+  ) +
+  # Títulos e rótulos
+  labs(
+    x = paste0("Dimensão 1 (", round(percent.of.var[1], 2), "%)"),
+    y = paste0("Dimensão 2 (", round(percent.of.var[2], 2), "%)")
+  ) +
+  
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  ) + coord_fixed(ratio = 1)
+```
+
+Por fim, foi construída a @fig-CONTRIB. Este gráfico mostra as variáveis que são mais correlacionadas com o CP$_{1}$ e CP$_{2}$ são as mais importantes para explicar a variabilidade dos dados. As variáveis que não são correlacionadas com nenhum CP ou correlacionadas com as últimas dimensões (últimos CP’s) são variáveis com baixa contribuições e candidatas a serem removidas para simplificar a análise.
+
+```{r}
+#| fig-cap: "Gráfico de Contribuições das Variáveis nos Componentes Pricipais."
+#| label: fig-CONTRIB_Q3
+
+# -------------------------------------
+# [2.4.3] ANÁLISE GRÁFICA: CONTRIBUIÇÃO
+# -------------------------------------
+
+# Obter Dados de Contribuição das Variáveis
+var.contrib <- as.data.frame(model.PCA.Q3$var$contrib)
+
+# Ajustar o nome das colunas
+colnames(var.contrib) <- 1:5 # paste("Dimensão", 1:ncol(var.contrib))
+
+# Ajustando Dados para o ggplot2 (Formato Long)
+var.contrib.LONG <- var.contrib %>%
+  tibble::rownames_to_column(var = "Variable") %>%
+  pivot_longer(
+    cols = "1":"5",
+    names_to = "Component",
+    values_to = "Contribution"
+  )
+
+# Gerar gráfico
+ggplot(
+  data = var.contrib.LONG, 
+  aes(x = Component, y = Variable, size = Contribution, fill = Contribution)
+) +
+  # Contribuição
+  geom_point(shape = 21) + 
+  scale_size_continuous(range = c(0, 10)) +
+  scale_fill_gradientn(
+    colours = c("lightblue", "skyblue", "royalblue", "blue", "darkblue"),
+    values = scales::rescale(c(0, 25, 50, 75, 100))  # ajusta para sua escala de contribuição
+  ) +
+  # Rótulos
+  labs(x = "Dimensão", y = "Variável", size = "Contribuição (%)", fill = "Contribuição (%)") +
+  # Tema
+  theme_classic(base_size = 11) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
+```
+
+# Códigos Utilizados
+
+Para ter acesso aos códigos utilizados, acesse o link [CODE UTILIZADO](https://github.com/csilv7/MULTIVARIATE_DATA_ANALYSIS/blob/main/MULTI%20II/LISTAS/LISTA%20III/CODES/CODE_L3_R.R).
