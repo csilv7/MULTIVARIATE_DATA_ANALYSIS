@@ -1,6 +1,6 @@
 project:
   type: book
-  output-dir: docs/
+  output-dir: C:\Users\user\Documents\PROJETOS\VS Code\MULTIVARIADA - VS\book\docs
 
 book:
   title: "ANÁLISE MULTIVARIADA"
@@ -51,6 +51,6 @@ format:
       \usepackage{latexsym,amssymb,amsmath,amsfonts}
     papersize: a4
     fontsize: 12pt
-    geometry: [left=2cm, top=2cm, right=2cm, bottom=2cm]
+    geometry: [left=2.5cm, top=2.5cm, right=2.5cm, bottom=2.5cm]
 
 lang: pt
