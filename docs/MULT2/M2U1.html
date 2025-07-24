@@ -237,6 +237,14 @@ window.Quarto = {
    
   <ul>
   <li><a href="#leitura-de-dados-multivariados" id="toc-leitura-de-dados-multivariados" class="nav-link active" data-scroll-target="#leitura-de-dados-multivariados">Leitura de Dados Multivariados</a></li>
+  <li><a href="#pré-processamento-de-dados-multivariados" id="toc-pré-processamento-de-dados-multivariados" class="nav-link" data-scroll-target="#pré-processamento-de-dados-multivariados">Pré-processamento de Dados Multivariados</a>
+  <ul class="collapse">
+  <li><a href="#familiarização-com-os-dados" id="toc-familiarização-com-os-dados" class="nav-link" data-scroll-target="#familiarização-com-os-dados">Familiarização com os Dados</a></li>
+  <li><a href="#limpeza-de-dados" id="toc-limpeza-de-dados" class="nav-link" data-scroll-target="#limpeza-de-dados">Limpeza de Dados</a></li>
+  <li><a href="#inserção-de-dadosvariáveis" id="toc-inserção-de-dadosvariáveis" class="nav-link" data-scroll-target="#inserção-de-dadosvariáveis">Inserção de Dados/Variáveis</a></li>
+  <li><a href="#transformação-de-dados" id="toc-transformação-de-dados" class="nav-link" data-scroll-target="#transformação-de-dados">Transformação de Dados</a></li>
+  <li><a href="#resumo-de-dados-análise-exploratória" id="toc-resumo-de-dados-análise-exploratória" class="nav-link" data-scroll-target="#resumo-de-dados-análise-exploratória">Resumo de Dados (Análise Exploratória)</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -281,11 +289,51 @@ window.Quarto = {
 <section id="leitura-de-dados-multivariados" class="level2">
 <h2 class="anchored" data-anchor-id="leitura-de-dados-multivariados">Leitura de Dados Multivariados</h2>
 <p>A matriz de dados <span class="math display">\[\mathbf{X_{n \times p}} = \begin{bmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1k} &amp; \ldots &amp; x_{1p} \\ x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2k} &amp; \ldots &amp; x_{2p} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{j1} &amp; x_{j2} &amp; \ldots &amp; x_{jk} &amp; \ldots &amp; x_{jp} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nk} &amp; \ldots &amp; x_{np} \\ \end{bmatrix},\]</span> onde <span class="math inline">\(x_{jk}\)</span> representa o <span class="math inline">\(j\)</span>-ésimo “indivíduo” para a <span class="math inline">\(k\)</span>-ésima variável.</p>
-<p>Essa matriz pode ser simplificada por meio de um vetor aleatório, cujos elementos são as variáveis aleatórias: <span class="math inline">\(\mathbf{X^{\intercal}} = \begin{bmatrix} \mathbf{X_{1}} &amp; \mathbf{X_{2}} &amp; \ldots &amp; \mathbf{X_{p}} \end{bmatrix}^{\intercal}\)</span>.</p>
+<p>Essa matriz pode ser simplificada por meio de um vetor aleatório, cujos elementos são as variáveis aleatórias: <span class="math inline">\(\mathbf{X^{\intercal}} = \begin{bmatrix} \mathbf{X_{1}} &amp; \mathbf{X_{2}} &amp; \ldots &amp; \mathbf{X_{p}} \end{bmatrix}\)</span>. Quando se tem um vetor aleatório, cada variável pode ser analisada separadamente (análise univariada), mas sempre é importante analisá-lo conjuntamente para avaliar as interrelações entre as variáveis. As variáveis podem ser quantitativas ou qualitativas.</p>
+</section>
+<section id="pré-processamento-de-dados-multivariados" class="level2">
+<h2 class="anchored" data-anchor-id="pré-processamento-de-dados-multivariados">Pré-processamento de Dados Multivariados</h2>
+<section id="familiarização-com-os-dados" class="level3">
+<h3 class="anchored" data-anchor-id="familiarização-com-os-dados">Familiarização com os Dados</h3>
+<p>Na primeira parte do pré-processamento é feita a análise do banco de dados original, para conhecer as variáveis, selecionar as variáveis necessárias e identificar eventuais problemas. Incluem os seguintes passos:</p>
+<ol type="1">
+<li>Identificar as variáveis necessárias ao estudo.</li>
+<li>Verificar se o banco já contém todas as variáveis de estudo ou se precisam ser buscados outros bancos de dados para agregar informações. Verificar se o banco possui variável ou variáveis de identificação, que permitirá fazer a ligação com outros bancos de dados, caso seja necessário.</li>
+<li>Definir e classificar todas as variáveis no banco de dados.</li>
+<li>Realizar a análise univariada por tipo de variáveis: quantitativas e qualitativas.</li>
+<li>Identificar variáveis com valores faltantes (missing values) em excesso, verificar possibilidade de imputação de dados.</li>
+<li>Identificar variáveis com valores aberrantes (outliers), ou com dados inconsistentes.</li>
+<li>Verificar se alguma variável tem características especiais. Por exemplo, uma variável quantitativa com excesso de zero, variáveis qualitativas com grande concentração em uma das categorias.</li>
+</ol>
+</section>
+<section id="limpeza-de-dados" class="level3">
+<h3 class="anchored" data-anchor-id="limpeza-de-dados">Limpeza de Dados</h3>
+<p>Se for verificada a necessidade de fazer alterações no banco de dados, isto deve ser feito antes que qualquer análise estatística mais aprofundada possa ser executada. Para lidar com esta situação, deve ser feita a limpeza de dados. Então aqui deve-se filtrar informações irrelevantes, questionar a fonte primária sobre inconsistências, confirmar a veracidade de valores aberrantes, verificar a necessidade de fazer a imputação de dados faltantes (Depende do tipo de dado e do percentual de dados faltantes em relação ao total).</p>
+</section>
+<section id="inserção-de-dadosvariáveis" class="level3">
+<h3 class="anchored" data-anchor-id="inserção-de-dadosvariáveis">Inserção de Dados/Variáveis</h3>
+<p>Dependendo do objetivo da análise pode ser necessária a inserção de dados de outras fontes ou bancos de dados. Nesse caso as variáveis que identificam cada caso de maneira única (variáveis de identificação, variáveis chave) são essenciais para que a ligação entre os bancos possa ser feita.</p>
+</section>
+<section id="transformação-de-dados" class="level3">
+<h3 class="anchored" data-anchor-id="transformação-de-dados">Transformação de Dados</h3>
+<p>Caso seja necessário, pode-se transformar os dados originais em formatos mais apropriados:</p>
+<ol type="1">
+<li><p><strong>Normalização/Padronização:</strong> é comum em dados multivariados termos informação no banco de dados de natureza distinta, então é prática comum em muitas áreas fazer a normalização ou a padronização de todo o conjunto de variáveis. As técnicas de normalização e padronização têm o mesmo objetivo: transformar todas as variáveis para a mesma ordem de grandeza. E a diferença básica entre as duas técnicas é que padronizar as variáveis irá resultar em uma média igual a 0 e um desvio padrão igual a 1. Já normalizar tem como objetivo colocar as variáveis dentro do intervalo de 0 e 1, e caso tenha resultado negativo -1 e 1.</p></li>
+<li><p><strong>Criação de novas variáveis:</strong> tais como variáveis indicadoras (dummies), ou uma categoria agregada, ou uma variável quantitativa criada a partir de outras variáveis existentes no banco de dados.</p></li>
+<li><p><strong>Discretização/categorização:</strong> É o processo de transformação de variáveis contínuas em discretas ou categóricas. Algumas técnicas só trabalham com entradas de valores discretos ou categóricos, então a solução é a discretização que cria um número limitado de possíveis estados ou a categorização que transforme de quantitativa para qualitativa.</p></li>
+</ol>
+</section>
+<section id="resumo-de-dados-análise-exploratória" class="level3">
+<h3 class="anchored" data-anchor-id="resumo-de-dados-análise-exploratória">Resumo de Dados (Análise Exploratória)</h3>
+<p>A análise exploratória de dados multivariados (AED) possibilita a detecção de erros e inconsistências, determinação do relacionamento entre as variáveis, verificação da similaridade ou dissimilaridade entre as observações (indivíduos ou casos) e indicar as técnicas multivariadas adequadas de acordo com o tipo de variável e objetivo do trabalho. A partir de uma matriz de dados quantitativos podem ser calculadas algumas estatísticas para início da análise:</p>
+<ol type="1">
+<li>O vetor de médias amostral: <span class="math inline">\(\mathbf{\overline{X}^{\intercal}} = \begin{bmatrix} \overline{X}_{1} &amp; \overline{X}_{2} &amp; \ldots &amp; \overline{X}_{k} &amp; \ldots &amp; \overline{X}_{p} \end{bmatrix}\)</span>, onde <span class="math inline">\(\overline{X}_{k} = \frac{1}{1} \sum_{j=1}^{n} x_{jk}\)</span>.</li>
+</ol>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -774,7 +822,45 @@ window.Quarto = {
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>A matriz de dados $$\mathbf{X_{n \times p}} = \begin{bmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1k} &amp; \ldots &amp; x_{1p} <span class="sc">\\</span> x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2k} &amp; \ldots &amp; x_{2p} <span class="sc">\\</span> \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots <span class="sc">\\</span> x_{j1} &amp; x_{j2} &amp; \ldots &amp; x_{jk} &amp; \ldots &amp; x_{jp} <span class="sc">\\</span> \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots <span class="sc">\\</span> x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nk} &amp; \ldots &amp; x_{np} <span class="sc">\\</span> \end{bmatrix},$$ onde $x_{jk}$ representa o $j$-ésimo "indivíduo" para a $k$-ésima variável.</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>Essa matriz pode ser simplificada por meio de um vetor aleatório, cujos elementos são as variáveis aleatórias: $\mathbf{X^{\intercal}} = \begin{bmatrix} \mathbf{X_{1}} &amp; \mathbf{X_{2}} &amp; \ldots &amp; \mathbf{X_{p}} \end{bmatrix}^{\intercal}$.</span></code><button title="Copiar para a área de transferência" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>Essa matriz pode ser simplificada por meio de um vetor aleatório, cujos elementos são as variáveis aleatórias: $\mathbf{X^{\intercal}} = \begin{bmatrix} \mathbf{X_{1}} &amp; \mathbf{X_{2}} &amp; \ldots &amp; \mathbf{X_{p}} \end{bmatrix}$. Quando se tem um vetor aleatório, cada variável pode ser analisada separadamente (análise univariada), mas sempre é importante analisá-lo conjuntamente para avaliar as interrelações entre as variáveis. As variáveis podem ser quantitativas ou qualitativas.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pré-processamento de Dados Multivariados</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">### Familiarização com os Dados</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>Na primeira parte do pré-processamento é feita a análise do banco de dados original, para conhecer as variáveis, selecionar as variáveis necessárias e identificar eventuais problemas. Incluem os seguintes passos:</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Identificar as variáveis necessárias ao estudo.</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Verificar se o banco já contém todas as variáveis de estudo ou se precisam ser buscados outros bancos de dados para agregar informações. Verificar se o banco possui variável ou variáveis de identificação, que permitirá fazer a ligação com outros bancos de dados, caso seja necessário.</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Definir e classificar todas as variáveis no banco de dados.</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Realizar a análise univariada por tipo de variáveis: quantitativas e qualitativas.</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Identificar variáveis com valores faltantes (missing values) em excesso, verificar possibilidade de imputação de dados.</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>Identificar variáveis com valores aberrantes (outliers), ou com dados inconsistentes.</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>Verificar se alguma variável tem características especiais. Por exemplo, uma variável quantitativa com excesso de zero, variáveis qualitativas com grande concentração em uma das categorias.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limpeza de Dados</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>Se for verificada a necessidade de fazer alterações no banco de dados, isto deve ser feito antes que qualquer análise estatística mais aprofundada possa ser executada. Para lidar com esta situação, deve ser feita a limpeza de dados. Então aqui deve-se filtrar informações irrelevantes, questionar a fonte primária sobre inconsistências, confirmar a veracidade de valores aberrantes, verificar a necessidade de fazer a imputação de dados faltantes (Depende do tipo de dado e do percentual de dados faltantes em relação ao total).</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### Inserção de Dados/Variáveis</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>Dependendo do objetivo da análise pode ser necessária a inserção de dados de outras fontes ou bancos de dados. Nesse caso as variáveis que identificam cada caso de maneira única (variáveis de identificação, variáveis chave) são essenciais para que a ligação entre os bancos possa ser feita.</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### Transformação de Dados</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>Caso seja necessário, pode-se transformar os dados originais em formatos mais apropriados:</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Normalização/Padronização:** é comum em dados multivariados termos informação no banco de dados de natureza distinta, então é prática comum em muitas áreas fazer a normalização ou a padronização de todo o conjunto de variáveis. As técnicas de normalização e padronização têm o mesmo objetivo: transformar todas as variáveis para a mesma ordem de grandeza. E a diferença básica entre as duas técnicas é que padronizar as variáveis irá resultar em uma média igual a 0 e um desvio padrão igual a 1. Já normalizar tem como objetivo colocar as variáveis dentro do intervalo de 0 e 1, e caso tenha resultado negativo -1 e 1.</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Criação de novas variáveis:** tais como variáveis indicadoras (dummies), ou uma categoria agregada, ou uma variável quantitativa criada a partir de outras variáveis existentes no banco de dados.</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Discretização/categorização:** É o processo de transformação de variáveis contínuas em discretas ou categóricas. Algumas técnicas só trabalham com entradas de valores discretos ou categóricos, então a solução é a discretização que cria um número limitado de possíveis estados ou a categorização que transforme de quantitativa para qualitativa.</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">### Resumo de Dados (Análise Exploratória)</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>A análise exploratória de dados multivariados (AED) possibilita a detecção de erros e inconsistências, determinação do relacionamento entre as variáveis, verificação da similaridade ou dissimilaridade entre as observações (indivíduos ou casos) e indicar as técnicas multivariadas adequadas de acordo com o tipo de variável e objetivo do trabalho. A partir de uma matriz de dados quantitativos podem ser calculadas algumas estatísticas para início da análise:</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>O vetor de médias amostral: $\mathbf{\overline{X}^{\intercal}} = \begin{bmatrix} \overline{X}_{1} &amp; \overline{X}_{2} &amp; \ldots &amp; \overline{X}_{k} &amp; \ldots &amp; \overline{X}_{p} \end{bmatrix}$, onde $\overline{X}_{k} = \frac{1}{1} \sum_{j=1}^{n} x_{jk}$.</span></code><button title="Copiar para a área de transferência" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
