@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ANÁLISE MULTIVARIADA",
+    "section": "",
+    "text": "Prefácio\nEm um mundo cada vez mais impulsionado por dados, a capacidade de extrair insights significativos de conjuntos de dados complexos tornou-se uma habilidade indispensável. A análise multivariada, com sua gama de técnicas para explorar relações entre múltiplas variáveis, figura como uma ferramenta poderosa nesse cenário.\nEste livro, “Análise Multivariada de Dados com R”, foi concebido com o propósito de desmistificar e tornar acessíveis os conceitos e aplicações da análise multivariada, utilizando a linguagem R como nossa principal ferramenta. Acreditamos que, ao combinar a teoria com exemplos práticos e implementações em R, podemos capacitar estudantes, pesquisadores e profissionais a aplicar essas técnicas em suas próprias áreas de interesse.\nNosso objetivo foi criar um recurso que não apenas introduza os fundamentos da análise multivariada, mas que também sirva como um guia prático para a resolução de problemas reais. Esperamos que este material seja um valioso companheiro em sua jornada de exploração de dados, abrindo novas perspectivas e insights.\n\nEste é um Quarto book. Para saber mais sobre Quarto books, visite https://quarto.org/docs/books/.",
+    "crumbs": [
+      "Prefácio"
+    ]
+  },
+  {
+    "objectID": "MULT2/M2U1.html",
+    "href": "MULT2/M2U1.html",
+    "title": "Unidade I – Introdução",
+    "section": "",
+    "text": "Leitura de Dados Multivariados\nA análise multivariada de dados refere-se a um conjunto de técnicas estatísticas que possibilita a análise simultânea de múltiplas medidas para indivíduos, objetos ou fenômenos diversos observados. De maneira geral, a análise multivariada é usada para:\nEm análise multivariada o interesse da análise pode ser na estrutura das variáveis ou dos indivíduos.\nA matriz de dados \\[\\mathbf{X_{n \\times p}} = \\begin{bmatrix} x_{11} & x_{12} & \\ldots & x_{1k} & \\ldots & x_{1p} \\\\ x_{21} & x_{22} & \\ldots & x_{2k} & \\ldots & x_{2p} \\\\ \\vdots & \\vdots & \\ddots & \\vdots & \\ddots & \\vdots \\\\ x_{j1} & x_{j2} & \\ldots & x_{jk} & \\ldots & x_{jp} \\\\ \\vdots & \\vdots & \\ddots & \\vdots & \\ddots & \\vdots \\\\ x_{n1} & x_{n2} & \\ldots & x_{nk} & \\ldots & x_{np} \\\\ \\end{bmatrix},\\] onde \\(x_{jk}\\) representa o \\(j\\)-ésimo “indivíduo” para a \\(k\\)-ésima variável.",
+    "crumbs": [
+      "MULTIVARIADA II",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Unidade I – Introdução</span>"
+    ]
+  }
+]
