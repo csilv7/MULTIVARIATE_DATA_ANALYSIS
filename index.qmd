@@ -1,0 +1,11 @@
+# Prefácio {.unnumbered}
+
+Em um mundo cada vez mais impulsionado por dados, a capacidade de extrair *insights* significativos de conjuntos de dados complexos tornou-se uma habilidade indispensável. A análise multivariada, com sua gama de técnicas para explorar relações entre múltiplas variáveis, figura como uma ferramenta poderosa nesse cenário.
+
+Este livro, "**Análise Multivariada de Dados com R**", foi concebido com o propósito de desmistificar e tornar acessíveis os conceitos e aplicações da análise multivariada, utilizando a linguagem R como nossa principal ferramenta. Acreditamos que, ao combinar a teoria com exemplos práticos e implementações em R, podemos capacitar estudantes, pesquisadores e profissionais a aplicar essas técnicas em suas próprias áreas de interesse.
+
+Nosso objetivo foi criar um recurso que não apenas introduza os fundamentos da análise multivariada, mas que também sirva como um guia prático para a resolução de problemas reais. Esperamos que este material seja um valioso companheiro em sua jornada de exploração de dados, abrindo novas perspectivas e *insights*.
+
+---
+
+Este é um *Quarto book*. Para saber mais sobre *Quarto books*, visite <https://quarto.org/docs/books/>.

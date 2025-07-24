@@ -1,0 +1,24 @@
+# Unidade I – Introdução
+
+A *análise multivariada* de dados refere-se a um conjunto de técnicas estatísticas que possibilita a análise simultânea de múltiplas medidas para indivíduos, objetos ou fenômenos diversos observados. De maneira geral, a análise multivariada é usada para:
+
+1. **Redução de dados ou simplificação estrutural:** explora a correlação entre as variáveis originais para construir índices ou outro conjunto de variáveis que sintetizam as variáveis originais, sem perder a informação.
+
+    * **Ex:** Análise Fatorial.
+
+2. **Classificação e discriminação:** agrupa indivíduos ou objetos ou variáveis similares de acordo com as suas características, pode ser utilizada para dados com variável resposta (dados supervisionados), ex: análise
+discriminante, ou para dados sem variável resposta (dados não supervisionados).
+
+    * **Ex:** Análise de Agrupamentos.
+
+3. **Analisar a relação entre as variáveis:** avalia a relação de dependência entre uma variável e um conjunto de outras variáveis, ou a dependência mútua entre grupos de variáveis.
+
+    * **Ex:** Modelos de Regressão ou Equações Estruturais.
+
+Em análise multivariada o interesse da análise pode ser na estrutura das variáveis ou dos indivíduos.
+
+## Leitura de Dados Multivariados
+
+A matriz de dados $$\mathbf{X_{n \times p}} = \begin{bmatrix} x_{11} & x_{12} & \ldots & x_{1k} & \ldots & x_{1p} \\ x_{21} & x_{22} & \ldots & x_{2k} & \ldots & x_{2p} \\ \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\ x_{j1} & x_{j2} & \ldots & x_{jk} & \ldots & x_{jp} \\ \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\ x_{n1} & x_{n2} & \ldots & x_{nk} & \ldots & x_{np} \\ \end{bmatrix},$$ onde $x_{jk}$ representa o $j$-ésimo "indivíduo" para a $k$-ésima variável.
+
+Essa matriz pode ser simplificada por meio de um vetor aleatório, cujos elementos são as variáveis aleatórias: $\mathbf{X^{\intercal}} = \begin{bmatrix} \mathbf{X_{1}} & \mathbf{X_{2}} & \ldots & \mathbf{X_{p}} \end{bmatrix}^{\intercal}$.
