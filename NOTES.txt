@@ -3,6 +3,9 @@
     * **Teste de Henze-Zirkler:** Normalidade Multivariada;
     * **Teste $T^{2}$ de Hotelling:** Equivalente ao Teste t univariado.
 
+
+factor_analyzer python
+
 import numpy as np
 import scipy.stats as stats
 

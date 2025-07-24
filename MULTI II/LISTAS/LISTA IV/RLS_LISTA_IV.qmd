@@ -1,0 +1,143 @@
+---
+title: "Análise Multivariada II"
+subtitle: "Lista IV"
+author: "Breno Cauã Rodrigues da Silva"
+format:
+  pdf:
+    pdf-engine: lualatex
+    documentclass: article
+    number-sections: true
+    fig-pos: "H"
+    dpi: 600
+    indent: false
+    header-includes: |
+      
+    fontsize: 11pt
+    geometry: [left=2cm, top=2cm, right=2cm, bottom=2cm]
+    echo: false
+    message: false
+    warning: false
+    
+lang: pt
+---
+
+# Análise de Componentes Principais (ACP)
+
+## ADAF-AM - Estatístico (2018)
+
+A **primeira componente principal ($PC_{1}$)** é uma **combinação linear das variáveis $X_{1}$, $X_{2}$ e $X_{3}$**, ponderadas pelos **valores do primeiro autovetor**. Portanto:
+
+$$
+\text{PC}_{1} = -0{,}39 X_1 + 0{,}95 X_2 + 0{,}00 X_3.
+$$
+
+Como o  $X_{3}$ não contribui, podemos reescrever:
+
+$$
+Y_1 = -0{,}39 X_1 + 0{,}95 X_2.
+$$
+
+Logo, a **alternativa correta é o item (A)**.
+
+## ADAF-AM - Estatístico (2018)
+
+A **variância de cada componente principal** é dada pelo seu **autovalor**. Como os componentes principais são **não correlacionados**, a **matriz de covariâncias de Y (componentes principais)** é **diagonal**, com os autovalores na diagonal. Logo:
+
+$$
+V(Y) =
+\begin{bmatrix}
+5{,}813 & 0 & 0 \\
+0 & 2{,}350 & 0 \\
+0 & 0 & 0{,}250
+\end{bmatrix}
+$$
+
+Desta forma, a **alternativa correta é o item (B)**.
+
+## DATAPREV - 2012
+
+Ao analisar cada uma das afirmações, chega-se as seguintes conclusões:
+
+* **I. Verdadeira.** A PC1 é a combinação linear com **maior variância possível**.
+* **II. Verdadeira.** As PCs subsequentes são **não correlacionadas** com as anteriores.
+* **III. Verdadeira.** A padronização é **recomendada** para lidar com escalas diferentes.
+* **IV. Verdadeira.** A decomposição da **matriz de correlação** nos fornece autovalores e autovetores.
+* **V. Falsa.** A **matriz das cargas fatoriais** **não é dada por** $F = UD$ (isso é confundir com análise fatorial).
+* **VI. False.** A fórmula apresentada para o **teste de esfericidade de Bartlett** está incorreta.
+
+Desta forma, constata-se que somente a **V e VI** são falsas. Com isso,  a **alternativa correta é o item (C)**.
+
+## TJ-RO - Analista Judiciário - Estatística (2012)
+
+A questão não apresenta o valor de todos os autovalores, então será considerado que a variância total é $20 = p = \text{número de variáveis}$. Para calcular o **percentual de variação explicada**:
+
+1. Soma dos 5 maiores autovalores: $6 + 4 + 3 + 2 + 1 = 16$
+2. Soma total dos autovalores: como são 20 variáveis, essa soma é **20** (variância total).
+3. Percentual explicado: $\frac{16}{20} \times 100 = 80\%$
+
+Assim, a **alternativa correta é o item (A)**
+
+## DATAPREV - 2009
+
+A PCA busca **reduzir a dimensionalidade** dos dados, mantendo **o máximo possível da variabilidade** explicada pelas variáveis originais. Com isso, a **alternativa correta é o item (A)**.
+
+# Análise de Fatorial (AF)
+
+## DPE-PR - Estatístico (2017)
+
+Ao analisar cada uma das afirmações, chega-se as seguintes conclusões:
+
+* **(A)** *Errada*. O **teste de Bartlett** *sozinho não é suficiente*. Ele deve ser usado **junto com o KMO** para verificar a adequação da análise fatorial. Além disso, se a hipótese nula **é aceita**, significa que a **matriz é identidade**, ou seja, **não há correlação** entre as variáveis — **portanto a análise fatorial não é indicada**.
+
+* **(B)** *Errada*. KMO = 0,79 é considerado **bom** (quanto mais próximo de 1, melhor). E o p-valor < 0,001 no teste de Bartlett **rejeita** a hipótese de matriz identidade, indicando que **existe correlação**.
+
+* **(C)** *Errada*. Se as medidas de adequação das variáveis (MSA) forem **acima de 0,5**, isso indica que **as variáveis se ajustam bem** à estrutura — o correto seria **mantê-las** no modelo.
+
+* **(D)** *Errada*. Mesmo que a variância explicada seja inferior a 60%, **isso não impede** a retenção de fatores. A interpretação depende do objetivo do estudo.
+
+* **(E)** *Correta*. O **teste de esfericidade de Bartlett com p < 0,001** nos leva a **rejeitar a hipótese nula**, ou seja, **a matriz de correlação não é identidade** ⇒ as variáveis estão correlacionadas ⇒ a **Análise Fatorial é adequada**.
+
+Com isso, a **alternativa correta é o item (E)**.
+
+## EBSERH - 2017
+
+🔎 **Comunalidade** mede o **quanto da variância de uma variável é explicada pelos fatores comuns**. É a **soma dos quadrados das cargas fatoriais** de uma variável em todos os fatores. Com isso, a **alternativa correta é o item (C)**.
+
+## TRE-MG - Analista Judiciário - Estatística (2013)
+
+Análise das afirmações:
+
+1. **Falsa** - $\Psi$ é diagonal (variâncias específicas).
+2. **Verdadeira** - Componentes principais é um método de estimação.
+3. **Verdadeira** - Descreve corretamente máxima verossimilhança.
+4. **Verdadeira** - Rotação mantém ortogonalidade.
+5. **Falsa** - Rotação oblíqua permite fatores correlacionados.
+
+Deste modo, a **alternativa correta é o item (C)**.
+
+## TRF-2ª REGIÃO - 2017
+
+* **(A)** *Correta*. A rotação (como Varimax) torna as **cargas mais interpretáveis**.
+* **(B)** *Incorreta*. Quando você **adiciona novos fatores**, os fatores anteriores **podem mudar**, pois o modelo é recalibrado.
+* **(C)** *Correta*. Os fatores assumem **média zero** por construção.
+* **(D)** *Correta*. Os autovalores da matriz de correlação são usados para decidir **quantos fatores reter**.
+
+Com isso, a **alternativa correta é o item (B)**.
+
+## PC-MG - Analista da Polícia Civil - Estatística (2013)
+
+**Varimax**, **Equamax** e **Quartimax** são métodos de rotação **ortogonais**. Em contrapartida o método **Promax** é um método de rotação **oblíqua**. Logo, a **alternativa correta é o item (A)**.
+
+## TJ-RS - 2012
+
+* **(A)** *Errada*. Se o p-valor for **pequeno**, **rejeita-se** a hipótese de matriz identidade. Isso significa que **há correlação**, e **a análise fatorial é indicada**.
+
+* **(B)** *Errada*. Se as correlações forem **altas**, as variáveis provavelmente **compartilham fatores comuns**.
+
+* **(C)** *Errada*. Isso é **confusão de conceitos**: o autovalor na matriz contraimagem está relacionado à adequação da variável.
+
+* **(D)** *Correta*. A interpretação das **cargas fatoriais** pode ser vista como **coeficientes de regressão padronizados** — ou seja, **a variável original é explicada pelos fatores**.
+
+* **(E)** *Errada*. Para selecionar fatores, **autovalores grandes** devem ser **retidos**. Não os pequenos.
+
+Após a análise dos  itens, checou-se que a **alternativa correta é o item (D)**.
