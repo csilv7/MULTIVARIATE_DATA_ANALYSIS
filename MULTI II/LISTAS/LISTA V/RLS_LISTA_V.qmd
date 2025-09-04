@@ -1,0 +1,723 @@
+---
+title: "Análise Multivariada II"
+subtitle: "LISTA V - ANÁLISE DISCRIMINANTE (AD)"
+author: "Breno Cauã Rodrigues da Silva"
+format:
+  pdf:
+    pdf-engine: lualatex
+    keep-tex: true
+    documentclass: article
+    number-sections: true
+    fig-pos: "H"
+    dpi: 600
+    indent: false
+    header-includes: |
+      \usepackage[utf8]{inputenc} % Caracteres Especiais
+      \usepackage{indentfirst} % Identação
+      \usepackage[T1]{fontenc} % Especifica a codificação de fonte a ser usada
+      \usepackage[left=2cm, top=2cm, right=2cm, bottom=2cm]{geometry}
+      \usepackage{graphicx} % Figuras
+      \usepackage{latexsym, amssymb, amsmath, amsfonts, amsthm} % Formatação Matemática
+      \usepackage{xcolor}
+      
+      \renewcommand{\familydefault}{\sfdefault}
+      
+      \usepackage{float, caption}
+      \floatplacement{table}{H}
+      \floatplacement{figure}{H}
+      \captionsetup[table]{position=above}
+      \captionsetup[figure]{position=below}
+      
+    fontsize: 11pt
+    echo: false
+    message: false
+    warning: false
+    
+lang: pt
+---
+
+```{r}
+#| label: Configuration of R used
+
+# -------------------------------------------------------------
+# LISTA V - ANÁLISE DISCRIMINANTE (AD) - CONFIGURAÇÕES INICIAIS
+# -------------------------------------------------------------
+
+# Pacotes Necessários
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(gt)
+
+# Formatação de Decimal
+options(OutDec = ",")
+
+# Definir Diretório de Trabalho
+setwd("~/PROJETOS/VS Code/MULTIVARIADA - VS/MULTI II")
+
+# Leitura de Dados
+Players <- read_excel("UNIDADE V - AD/Jogadores.xlsx")
+
+# ------------------------
+# [1] ANÁLISE EXPLORATÓRIA
+# ------------------------
+
+# Convertendo para o formato long
+df.to_plot <- Players %>% tidyr::pivot_longer(
+  cols = colnames(Players %>% select(-Grupo)),
+  names_to = "VARIABLES",
+  values_to = "VALUES"
+) %>%
+  mutate(GROUP = as.factor(Grupo)) %>%
+  select(-Grupo)
+```
+
+# Os dados do arquivo “`Jogadores.xls`” foram coletados por G. R. Bryce e R. M. Barker (Apresentados em Rencher, 2002) como parte de um estudo preliminar sobre uma possível relação entre o design do capacete de futebol americano e lesões no pescoço. Seis medidas da cabeça foram feitas em cada sujeito. Havia 30 sujeitos em cada um dos três grupos: jogadores de futebol americano do ensino médio (grupo 1), jogadores de futebol americano universitário (grupo 2) e não jogadores de futebol americano (grupo 3). As seis variáveis são: {.unnumbered}
+
+```{=latex}
+{
+\Large\bf
+\begin{itemize}
+    \item \texttt{Larg\_cab}: Largura da cabeça na dimensão mais larga;
+    \item \texttt{Circ\_cab}: Circunferência da cabeça;
+    \item \texttt{Frent\_tras}: Medida da frente para trás na altura dos olhos;
+    \item \texttt{Olh\_cab}: Medida do olho ao topo da cabeça;
+    \item \texttt{Ore\_cab}: Medida da orelha ao topo da cabeça;
+    \item \texttt{Larg\_quei}: Largura da mandíbula.
+\end{itemize}
+}
+```
+
+# 1) Realize a análise exploratória de dados, apresentando a análise geral e por grupos (apresente tabelas e gráficos). {.unnumbered}
+
+A primeira proposta de análise foi elaborada na @tbl-SUMMARY, que apresenta as medidas de resumo das variáveis do conjunto de dados `Jogadores.xls`. A @tbl-SUMMARY não leva em consideração a variável de grupo.
+
+```{r}
+#| tbl-cap: "Medidas de Resumo para as Variáveis do Conjunto de Dados `Jogadores.xlsx`."
+#| label: tbl-SUMMARY
+
+# -----------------------------
+# [1.1.1] TABELA RESUMO (GERAL)
+# -----------------------------
+df.to_plot %>% select(-GROUP) %>% group_by(VARIABLES) %>% summarise(
+  Mean = mean(VALUES) %>% round(2),
+  Std = sd(VALUES) %>% round(2),
+  CV = sd(VALUES) / mean(VALUES),
+  Minimun = min(VALUES) %>% round(2),
+  Q1 = quantile(VALUES, 0.25) %>% round(2),
+  Median = median(VALUES) %>% round(2),
+  Q3 = quantile(VALUES, 0.75) %>% round(2),
+  Maximun = max(VALUES) %>% round(2)
+) %>%
+  gt() %>%
+  cols_label(
+    VARIABLES = "Variável",
+    Mean = "Média",
+    Std = "Desvio Padrão",
+    Minimun = "Mínimo",
+    Q1 = "1º Quartil",
+    Median = "Mediana",
+    Q3 = "3º Quartil",
+    Maximun = "Máximo"
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c("Mean", "Std", "CV", "Minimun", "Q1", "Median", "Q3", "Maximun")
+  ) %>%
+  fmt_percent(columns = CV, dec_mark = ",")
+```
+
+Podemos observar que, em termos de dispersão, a variável `olh_cab` (Medida do olho ao topo da cabeça) possui o maior Desvio Padrão em proporção à sua Média (14,76%), indicando uma variabilidade relativamente alta em comparação com outras medidas como `Circu_cab` (Circunferência da cabeça), que tem uma variabilidade proporcional menor (3,25%).  Outro ponto é a proximidade entre a Média e a Mediana para a maioria das variáveis (ex: `Frent_tras`, Média=19,91 e Mediana=19,90) sugere distribuições razoavelmente simétricas.
+
+Uma outra análise visual univariada pode ser feita a partir da @fig-HIST_UNI_VAR. Onde é apresentado o histograma para cada variável do *dataset* analisado.
+
+```{r}
+#| fig-cap: "Histograma das Variáveis Quantitativas do Conjunto de Dados `Jogadores.xls`."
+#| fig-subcap:
+#| - "`Larg_cab`"
+#| - "`Circu_cab`"
+#| - "`Frent_tras`"
+#| - "`olh_cab`"
+#| - "`ore_cab`"
+#| - "`Larg_quei`"
+#| layout-ncol: 3
+#| layout-nrow: 3
+#| label: fig-HIST_UNI_VAR
+
+# --------------
+# [1.2] GRÁFICOS
+# --------------
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = Larg_cab), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = Circu_cab), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = Frent_tras), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = olh_cab), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = ore_cab), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+
+# Histograma
+ggplot(data = Players) +
+  geom_histogram(aes(x = Larg_quei), bins = 15, color = "white", fill = "steelblue") +
+  labs(
+    x = "Larg_cab", y = "Frquência"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+```
+
+Os histogramas oferecem uma primeira visão sobre a distribuição de cada variável, ainda sem separação por grupo. Os histogramas de **(a)**, **(c)** e **(f)** aparentam ser uma forma ligeiramente simétrica com uma concentração de dados em torno do centro - lembrando uma distribuição gaussiana. 
+
+Apenas as variáveis de **(d)** e **(e)** se distanciam desse realidade de forma mais grosseira, com histogramas que lembram mais uma *distribuição bimodal* (com dois picos claros), isso é um forte indicativo de que os dados, quando vistos de forma agregada, escondem a existência de pelo menos dois subgrupos com características distintas. Essa observação justifica plenamente a necessidade de analisar os dados por grupo. Uma conclusão feita  em **(b)** é que a variável `Circu_cab` mostra uma leve assimetria à direita.
+
+Visando uma análise global juntamente da finalidade deste relatório, foi elaborada a @tbl-SUMMARY_BY_GROUP, que recalcula as medidas de resumo por grupo para cada uma das variáveis.
+
+```{r}
+#| tbl-cap: "Medidas de Resumo para as Variáveis do Conjunto de Dados `Jogadores.xlsx` por Grupo."
+#| label: tbl-SUMMARY_BY_GROUP
+
+# ---------------------------------
+# [1.1.2] TABELA RESUMO (POR GRUPO)
+# ---------------------------------
+df.to_plot %>% group_by(VARIABLES, GROUP) %>% summarise(
+  Mean = mean(VALUES) %>% round(2),
+  Std = sd(VALUES) %>% round(2),
+  CV = sd(VALUES) / mean(VALUES),
+  Minimun = min(VALUES) %>% round(2),
+  Q1 = quantile(VALUES, 0.25) %>% round(2),
+  Median = median(VALUES) %>% round(2),
+  Q3 = quantile(VALUES, 0.75) %>% round(2),
+  Maximun = max(VALUES) %>% round(2)
+) %>%
+  gt() %>%
+  cols_label(
+    GROUP = "Grupo",
+    Mean = "Média",
+    Std = "Desvio Padrão",
+    Minimun = "Mínimo",
+    Q1 = "1º Quartil",
+    Median = "Mediana",
+    Q3 = "3º Quartil",
+    Maximun = "Máximo"
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c("Mean", "Std", "CV", "Minimun", "Q1", "Median", "Q3", "Maximun")
+  ) %>%
+  fmt_percent(columns = CV, dec_mark = ",")
+```
+
+A @tbl-SUMMARY_BY_GROUP aprofunda a análise ao calcular as mesmas medidas de resumo, mas agora segmentadas para cada um dos três grupos: jogadores do ensino médio (1), jogadores universitários (2) e não jogadores (3). As princiapais diferenças observadas:
+
+* As variáveis **`olh_cab`** (Olho ao topo da cabeça), **`ore_cab`** (Orelha ao topo da cabeça) e **`Circu_cab`** (Circunferência da cabeça) apresentam diferenças entre os grupos ao olharmos para média e mediana de cada uma delas. Sendo que existe um padrão nessa diferença de grupos, pois, o Grupo 1 apresenta estatísticas maiores que o Grupo 3 que, por sua vez, apresenta estatísticas maiores que o Grupo 2.
+
+* Em contra-partida,  **`Frent_tras`**  (Frente para trás), **`Larg_cab`** (Largura da cabeça na dimensão mais larga) e **`Larg_quei`** (argura da mandíbula) mostraram estatísticas muito próximas entre os três grupos, indicando que ela provavelmente tem baixo poder para discriminar os grupos.
+
+No entanto, é importante ressaltar que as conclusões são baseadas em uma análise descritiva dos dados. Tendo em vista que as disparidades existentes entre os grupos não são de alta magnitude em todas as variáveis, para afirmar que os grupos de fato diferem entre si, poderíamos aplicar, por exemplo, uma MANOVA.
+
+Por fim, foi desenhada a @fig-BOXPLOT_BY_GROUP. Podemos avaliar a diferênça entre os grupos dentro das variáveis de uma forma visual por meio de Boxplots.
+
+```{r}
+#| fig-cap: "Boxplot das Variáveis do Conjunto de Dados `Jogadores.xlsx` por Grupo."
+#| label: fig-BOXPLOT_BY_GROUP
+
+# ----------------
+# [1.2.2] BOXPLOTS
+# ----------------
+# Gráfico com ggplot2
+ggplot(data = df.to_plot, aes(x = VARIABLES, y = VALUES, color = GROUP)) +
+  geom_boxplot() +
+  labs(
+    x = "Variáveis", y = "Medições", color = "Grupo"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+```
+
+Os boxplots da @fig-BOXPLOT_BY_GROUP permitem uma comparação visual direta da distribuição das variáveis entre os grupos, confirmando e reforçando as observações da análise das medidas de resumo da @tbl-SUMMARY_BY_GROUP. As variáveis **`olh_cab`**, **`ore_cab`** e **`Circu_cab`** demonstram as diferenças mais nítidas: as "caixas" do Grupo 1 estão posicionadas visivelmente acima das caixas dos Grupos 2 e 3, indicando pouca sobreposição. Visualmente, **`olh_cab`** parece ser a variável com maior poder de discriminação. Essa clara separação entre os grupos para ambas as variáveis explica a bimodalidade - das variáveis **`olh_cab`** e **`ore_cab`** - e assimetria - da variável **`Circu_cab`** - observada nos histogramas da @fig-HIST_UNI_VAR.
+
+Em contrapartida, as demais variáveis mostram um poder de distinção menor. **`Frent_tras`**, por exemplo, apresenta boxplots quase perfeitamente alinhados, confirmando sua baixa capacidade de diferenciar os grupos. As outras medidas também exibem sobreposição considerável, apesar de algumas diferenças nas medianas e na presença de valores discrepantes (outliers) no gráfico.
+
+De modo a fechar a análise exploratória e confirmar tudo o que já foi dito, foi elaborado a @fig-PAIRPLOT.
+
+```{r}
+#| fig-cap: " Pairplot do Conjunto de Dados Segmentadas pelo Grupo de Jogadores."
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-PAIRPLOT
+
+# ----------------
+# [1.2.3] PAIRPLOT
+# ----------------
+# Gerar Visualização
+GGally::ggpairs(
+  Players, 
+  mapping = aes(colour = as.factor(Grupo), alpha = 0.75), 
+  columns = Players %>% select(-Grupo) %>% colnames()
+) + theme_minimal()
+```
+
+---
+
+> **NOTA:** A título de bônus para a Questão 2, e como complemento à Análise Exploratória de Dados, será executada uma Análise de Variância Multivariada (MANOVA) com o objetivo de verificar a existência de diferenças estatisticamente significativas entre os grupos.
+
+---
+
+# 2) Faça testes de normalidade multivariada e teste de homogeneidade de variância. {.unnumbered}
+
+```{r}
+#| label: Verification of Assumptions
+
+# ------------------------------------------------
+# [2] PRESSUPOSTOS: NORM MULT E HOMOG MATRIZ COVAR
+# ------------------------------------------------
+
+# ------------------------------
+# [2.1] NORMALIDADE MULTIVARIADA
+# ------------------------------
+
+# Teste de Mardia
+mardia.test <- MVN::mvn(Players[, -1], mvn_test = "mardia")
+
+# Teste de Henze-Zirklers
+hz.test <- MVN::mvn(Players[, -1], mvn_test = "hz")
+
+# Teste de Royston
+royston.test <- MVN::mvn(Players[, -1], mvn_test = "royston")
+```
+
+
+A Análise Discriminante apresenta os seguintes pressupostos:
+
+1. Normalidade Multivariada das observações;
+2. Matrizes de Covariâncias dos grupos deve ser iguais.
+
+Desta forma, para verificar a *Normalidade Multivariada*, foram aplicados os Testes de Normalidade de Mardia, Henze-Zirklers e de Royston sob as hipóteses:
+
+$$
+\begin{cases} H_{0}: \text{Os dados seguem uma distribuição normal multivariada;} \\ H_{1}: \text{Os dados não seguem uma distribuição normal multivariada.} \end{cases}
+$$
+
+\noindent Veja a @tbl-MULT_NORM_TEST_MARDIA, @tbl-MULT_NORM_TEST_HZ, @tbl-MULT_NORM_TEST_ROYSTON.
+
+```{r}
+#| tbl-cap: "Teste de Mardia para Normalidade Multivariada."
+#| label: tbl-MULT_NORM_TEST_MARDIA
+
+# Formatação de Tabela
+knitr::kable(
+  mardia.test$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Henze-Zirkler para Normalidade Multivariada."
+#| label: tbl-MULT_NORM_TEST_HZ
+
+# Formatação de Tabela
+knitr::kable(
+  hz.test$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Royston para Normalidade Multivariada."
+#| label: tbl-MULT_NORM_TEST_ROYSTON
+
+# Formatação de Tabela
+knitr::kable(
+  royston.test$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+De certa forma houve empate entre os testes apresentados pela @tbl-MULT_NORM_TEST_MARDIA, @tbl-MULT_NORM_TEST_HZ, @tbl-MULT_NORM_TEST_ROYSTON. Para corrigir isso foi, primeiramente, realizado o Teste de Shapiro-Wilk para normalidade univariada. Os resultados estão disponíveis na @tbl-SHAPIRO_UNIVAR.
+
+```{r}
+#| tbl-cap: "Teste de Shapiro-Wilk para Normalidade Univariada."
+#| label: tbl-SHAPIRO_UNIVAR
+
+# Teste de Normalidade Univariada
+shapiro.rls <- tibble()
+for (i in 2:7) {
+  shapiro.rls <- shapiro.rls %>%
+    bind_rows(
+      tibble(
+        Variable = colnames(Players)[i],
+        W = shapiro.test(Players[[i]])$statistic,
+        ValueP = shapiro.test(Players[[i]])$p.value,
+        Normality = ifelse(shapiro.test(Players[[i]])$p.value <= 0.05, "Not normal", "Normal")
+      )
+    )
+}
+
+# Tabela Formata com o Teste de Shapiro para Normalidade Multivariada
+gt(shapiro.rls) %>%
+  cols_label(
+    Variable = "Variável",
+    W = md("Estatística $W$"),
+    ValueP = md("Valor $p$"),
+    Normality = "Normalidade"
+  ) %>%
+  fmt_number(
+    columns = c(W, ValueP),
+    dec_mark = ",",
+    decimals = 4
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c(W, ValueP)
+  )
+```
+
+Foi constatada a não normalidade apenas às variáveis `Larg_cab` e `Circu_cab`. Com isso, foi aplicada tranformação de Box-Cox com o parâmetro $\lambda$ estimado por máxima verossimilhança ($\lambda$ ótimo), dada pela seguinte expressão: $$Y^{(\lambda)} = \dfrac{Y^{\lambda} - 1}{\lambda}.$$ Foi usada a seguinte sintaxe no R:
+```r
+# ---------------------------
+# [2.2] TRANSFORMAÇÃO BOX-COX
+# ---------------------------
+Players.trf <- 1 * Players
+
+m1.for.boxcox <- lm(formula = Larg_cab ~ 1, data = Players.trf)
+r1.boxcox <- MASS::boxcox(m1.for.boxcox, lambda = seq(-4, 4, by = 0.01))
+lambda1.optim <- r1.boxcox$x[which.max(r1.boxcox$y)]
+Players.trf$Larg_cab <- (Players.trf$Larg_cab^lambda1.optim - 1) / lambda1.optim
+
+m2.for.boxcox <- lm(formula = Circu_cab ~ 1, data = Players.trf)
+r2.boxcox <- MASS::boxcox(m2.for.boxcox, lambda = seq(-4, 4, by = 0.01))
+lambda2.optim <- r1.boxcox$x[which.max(r2.boxcox$y)]
+Players.trf$Circu_cab <- (Players.trf$Circu_cab^lambda2.optim - 1) / lambda2.optim
+```
+
+```{r, include=FALSE}
+#| label: Transformation Data
+
+# ---------------------------
+# [2.2] TRANSFORMAÇÃO BOX-COX
+# ---------------------------
+Players.trf <- 1 * Players
+
+m1.for.boxcox <- lm(formula = Larg_cab ~ 1, data = Players.trf)
+r1.boxcox <- MASS::boxcox(m1.for.boxcox, lambda = seq(-4, 4, by = 0.01))
+lambda1.optim <- r1.boxcox$x[which.max(r1.boxcox$y)]
+Players.trf$Larg_cab <- (Players.trf$Larg_cab^lambda1.optim - 1) / lambda1.optim
+
+m2.for.boxcox <- lm(formula = Circu_cab ~ 1, data = Players.trf)
+r2.boxcox <- MASS::boxcox(m2.for.boxcox, lambda = seq(-4, 4, by = 0.01))
+lambda2.optim <- r1.boxcox$x[which.max(r2.boxcox$y)]
+Players.trf$Circu_cab <- (Players.trf$Circu_cab^lambda2.optim - 1) / lambda2.optim
+
+# Teste de Normalidade Multivariada
+mardia.test2 <- MVN::mvn(Players.trf[, -1], mvn_test = "mardia")
+hz.test2 <- MVN::mvn(Players.trf[, -1], mvn_test = "hz")
+royston.test2 <- MVN::mvn(Players.trf[, -1], mvn_test = "royston")
+```
+
+Desta forma, foi aplicado novamente o Teste de Shapiro-Wilk para normalidade univariada com resultados dispostos na @tbl-SHAPIRO_UNIVAR2. E posteriomente os Testes de Normalidade Multivariada apresentados na @tbl-MULT_NORM_TEST_MARDIA2, @tbl-MULT_NORM_TEST_HZ2, @tbl-MULT_NORM_TEST_ROYSTON2.
+
+```{r}
+#| tbl-cap: "Teste de Shapiro-Wilk para Normalidade Univariada."
+#| label: tbl-SHAPIRO_UNIVAR2
+
+# Teste de Normalidade Univariada
+shapiro.rls2 <- tibble()
+for (column in Players.trf %>% select(-c(Grupo)) %>% colnames()) {
+  shapiro.rls2 <- shapiro.rls2 %>%
+    bind_rows(
+      tibble(
+        Variable = column,
+        W = shapiro.test(Players.trf[[column]])$statistic,
+        ValueP = shapiro.test(Players.trf[[column]])$p.value,
+        Normality = ifelse(shapiro.test(Players.trf[[column]])$p.value <= 0.05, "Not normal", "Normal")
+      )
+    )
+}
+
+# Tabela Formata com o Teste de Shapiro para Normalidade Multivariada
+gt(shapiro.rls2) %>%
+  cols_label(
+    Variable = "Variável",
+    W = md("Estatística $W$"),
+    ValueP = md("Valor $p$"),
+    Normality = "Normalidade"
+  ) %>%
+  fmt_number(
+    columns = c(W, ValueP),
+    decimals = 4,
+    dec_mark = ","
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c(W, ValueP)
+  ) %>% 
+  tab_options(
+    table.width = pct(70)
+  )
+```
+
+```{r}
+#| tbl-cap: "Teste de Mardia para Normalidade Multivariada para os Dados Transformados."
+#| label: tbl-MULT_NORM_TEST_MARDIA2
+
+# Formatação de Tabela
+knitr::kable(
+  mardia.test2$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Henze-Zirkler para Normalidade Multivariada para os Dados Transformados."
+#| label: tbl-MULT_NORM_TEST_HZ2
+
+# Formatação de Tabela
+knitr::kable(
+  hz.test2$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+```{r}
+#| tbl-cap: "Teste de Royston para Normalidade Multivariada para os Dados Transformados."
+#| label: tbl-MULT_NORM_TEST_ROYSTON2
+
+# Formatação de Tabela
+knitr::kable(
+  royston.test2$multivariate_normality,
+  col.names = c("Teste", "Estatística de Teste", "Valor $p$", "Método", "Normalidade"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+Os resultados mostram que nem após a transformação Box-Cox a variável `Larg_cab` aderiu a distribuição normal. Entretanto, os testes de normalidade se mostraram mais concordantes entre si (adessão dos dados a normalidade multivariada), sendo que apenas o Teste de Royston apresentou resultado divergente. Agora, que os dados seguem uma distribuição normal multivariada, temos que verificar a *Homogeneidade/Homocedasticidade das Matrizes de Covariâncias*, foi aplicado o Teste M de Box sob as hipóteses:
+
+$$
+\begin{cases} H_{0}: \text{As matrizes de covariâncias são iguais;} \\ H_{1}: \text{As matrizes de covariâncias não são iguais.} \end{cases}
+$$
+
+\noindent Veja a @tbl-MBox.
+
+```{r}
+#| tbl-cap: "Teste M de Box para Homogeneidade das Matrizes de Covariâncias dos Grupos do Conjunto de Dados."
+#| label: tbl-MBox
+
+# ------------------------------------------------
+# [2.2] HOMOCEDASTICIDADE DE MATRIZ DE COVARIÂNCIA
+# ------------------------------------------------
+
+# Teste M de Box
+boxM.test <- biotools::boxM(data = Players.trf[, -1], grouping = Players.trf$Grupo)
+
+# Formatação de Tabela
+knitr::kable(
+  x = data.frame(
+    statistic = boxM.test$statistic, 
+    df =  boxM.test$parameter, 
+    p = boxM.test$p.value,
+    row.names = NULL
+  ),
+  col.names = c("Estatística de Teste", "Graus de Liberdade", "P-Valor"),
+  escape = FALSE,
+  align = "c",
+  booktabs = TRUE
+)
+```
+
+Como os pressupostos da Análise de Discriminante e Análise de Variância Multivariada são quase os mesmos, foi feita uma MANOVA para complemento da Análise Exploratória de Dados e para verificar se existe realmente diferença entre os grupos de forma estatisticamente significativa. Veja a @tbl-MANOVA.
+
+```{r}
+#| tbl-cap: "Análisede Variância Multivariada para o Fator Grupo de Jogadores."
+#| label: tbl-MANOVA
+
+# Formatar a Tabela de Resultados
+rls.manova <- data.frame(
+  Teste = c("Wilks", "Pillai", "Hotelling-Lawley", "Roy"),
+  GL = rep(1, 4),
+  Statistc = c(0.54228, 0.45772, 0.84407, 0.84407),
+  ApproxF = c(11.676, 11.676, 11.676, 11.676),
+  NumDF = rep(6, 4),
+  DenDF = rep(83, 4),
+  ValorP = c(1.912e-09, 1.912e-09, 1.912e-09, 1.912e-09),
+  Signif = rep("***", 4)
+)
+
+# Ajustando a Formatação da Tabela
+gt(rls.manova) %>%
+  cols_label(
+    GL = md("$gl$"),
+    Statistc = "Estatística",
+    ApproxF = md("F $\\approx$"),
+    NumDF = md("$gl_{\\text{num}}$"),
+    DenDF = md("$gl_{\\text{den}}$"),
+    ValorP = md("Valor $p$"),
+    Signif = "Significância"
+  )  %>%
+  cols_align(
+    align = "center",
+    columns = c("Statistc", "ApproxF", "NumDF", "DenDF", "ValorP", "Signif")
+  ) %>%
+  fmt_number(
+    columns = c(Statistc, ApproxF),
+    decimals = 2,
+    dec_mark = ","
+  ) %>%
+  fmt_scientific(columns = ValorP, dec_mark = ",") %>%
+  tab_source_note(
+    source_note = md("Significância: Rejeita-se $H_{0}$ para $\\alpha = 0$ ('`***`'); $\\alpha = 0.001$ ('`**`'); $\\alpha = 0.01$ ('`*`'); $\\alpha = 0.05$ ('`.`')")
+  )
+```
+
+Pode-se observar que todos os testes apontam à mesma direção: a diferença significativa entre os grupos. Logo, prosseguiremos para a Análise de Discriminante.
+
+# 3) Realize a análise discriminante utilizando todas as variáveis, apresente as funções discriminantes e a avaliação do modelo com a matriz de confusão e a acurácia (pelo menos). {.unnumbered}
+
+```{r}
+#| tbl-cap: "Coeficientes dos Discriminantes Lineares."
+#| label: tbl-COEFS_LDA
+
+# Tranformando para Fator
+Players.trf$Grupo <- as.factor(Players.trf$Grupo)
+
+# Modelo de Discriminação Linear
+model.lda <- MASS::lda(Grupo ~ ., data = Players.trf %>% select(-Circu_cab))
+
+# Ajutes dos Dados
+tbl.coef_lda <- as.data.frame(model.lda$scaling)
+tbl.coef_lda$Vars <- c("Larg_cab", "Frent_tras", "olh_cab", "ore_cab", "Larg_quei")
+tbl.coef_lda <- tbl.coef_lda %>% select(Vars, LD1, LD2)
+
+# Tabela com gt
+gt(tbl.coef_lda) %>%
+  cols_label(Vars = "Variável") %>%
+  cols_align(align = "center", columns = 2:3) %>%
+  fmt_number(columns = 2:3, decimals = 4, dec_mark = ",") %>% 
+  tab_options(
+    table.width = pct(50),
+    latex.use_longtable = T
+  )
+```
+
+A partir do modelo apresentado pela @tbl-COEFS_LDA, foi feita uma previsão para os dados e, desta forma, construída a *Matriz de Confusão* dada pela @tbl-MATRIX_CONFUSION.
+
+```{r}
+#| tbl-cap: "Matriz de Confunsão do Modelo de Discriminação Linear."
+#| label: tbl-MATRIX_CONFUSION
+
+# Criar a matriz de confusão
+matrix.confusion <- matrix(
+  data = c(26, 1, 3, 1, 20, 9, 2, 8, 20),
+  ncol = 3,
+  byrow = T,
+  dimnames = list(
+    paste0("Grupo ", 1:3),
+    paste0("Grupo ", 1:3)
+  )
+) 
+
+# Calcular a acurácia
+accuracy <- sum(diag(matrix.confusion)) / sum(matrix.confusion)
+
+# Formatando como Tabela
+matrix.confusion %>% as.data.frame() %>% gt(rownames_to_stub = T) %>%
+  cols_align(columns = everything(), align = "center") %>% 
+  tab_options(
+    table.width = pct(35),
+    latex.use_longtable = T
+  ) #%>%
+  #opt_table_font(
+  #  size = 12
+  #)
+```
+
+A partir da @tbl-MATRIX_CONFUSION, foi calculada a **acuracia** (percentual de acerto) do modelo descrito pela @tbl-COEFS_LDA. A acurácia obtida foi cerca de **`{r} format(accuracy * 100, digits = 4, decimal.mark = ",")`%**.
+
+# 4) Realize o procedimento stepwise e selecione um subgrupo de variáveis. {.unnumbered}
+
+# 5) Realize nova análise discriminante utilizando as variáveis selecionadas, apresente as funções discriminantes e a avaliação do modelo com a matriz de confusão e a acurácia (pelo menos). {.unnumbered}
+
+# 6) Pesquise uma função discriminante quadrática e realize mais uma AD com essa função, fazendo a avaliação do modelo (se desejar faça com todas as variáveis e com as selecionadas no stepwise, ou faça somente com as selecionadas). {.unnumbered}
+
+# 7) Compare as funções discriminantes em relação a matriz de confusão e acurácia e escolha a que você considera melhor. {.unnumbered}

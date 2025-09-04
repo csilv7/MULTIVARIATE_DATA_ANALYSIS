@@ -1,0 +1,1057 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  portuguese,
+  11pt,
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{anyfontsize}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc} % Caracteres Especiais
+\usepackage{indentfirst} % Identação
+\usepackage[T1]{fontenc} % Especifica a codificação de fonte a ser usada
+\usepackage[left=2cm, top=2cm, right=2cm, bottom=2cm]{geometry}
+\usepackage{graphicx} % Figuras
+\usepackage{latexsym, amssymb, amsmath, amsfonts, amsthm} % Formatação Matemática
+\usepackage{xcolor}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{float, caption}
+\floatplacement{table}{H}
+\floatplacement{figure}{H}
+\captionsetup[table]{position=above}
+\captionsetup[figure]{position=below}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Índice}
+\else
+  \newcommand\contentsname{Índice}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Lista de Figuras}
+\else
+  \newcommand\listfigurename{Lista de Figuras}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Lista de Tabelas}
+\else
+  \newcommand\listtablename{Lista de Tabelas}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figura}
+\else
+  \newcommand\figurename{Figura}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Tabela}
+\else
+  \newcommand\tablename{Tabela}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listagem}
+\newcommand*\listoflistings{\listof{codelisting}{Lista de Listagens}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Análise Multivariada II},
+  pdfauthor={Breno Cauã Rodrigues da Silva},
+  pdflang={pt},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{Análise Multivariada II}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{LISTA V - ANÁLISE DISCRIMINANTE (AD)}
+\author{Breno Cauã Rodrigues da Silva}
+\date{}
+\begin{document}
+\maketitle
+
+
+\section*{\texorpdfstring{Os dados do arquivo ``\texttt{Jogadores.xls}''
+foram coletados por G. R. Bryce e R. M. Barker (Apresentados em Rencher,
+2002) como parte de um estudo preliminar sobre uma possível relação
+entre o design do capacete de futebol americano e lesões no pescoço.
+Seis medidas da cabeça foram feitas em cada sujeito. Havia 30 sujeitos
+em cada um dos três grupos: jogadores de futebol americano do ensino
+médio (grupo 1), jogadores de futebol americano universitário (grupo 2)
+e não jogadores de futebol americano (grupo 3). As seis variáveis
+são:}{Os dados do arquivo ``Jogadores.xls'' foram coletados por G. R. Bryce e R. M. Barker (Apresentados em Rencher, 2002) como parte de um estudo preliminar sobre uma possível relação entre o design do capacete de futebol americano e lesões no pescoço. Seis medidas da cabeça foram feitas em cada sujeito. Havia 30 sujeitos em cada um dos três grupos: jogadores de futebol americano do ensino médio (grupo 1), jogadores de futebol americano universitário (grupo 2) e não jogadores de futebol americano (grupo 3). As seis variáveis são:}}\label{os-dados-do-arquivo-jogadores.xls-foram-coletados-por-g.-r.-bryce-e-r.-m.-barker-apresentados-em-rencher-2002-como-parte-de-um-estudo-preliminar-sobre-uma-possuxedvel-relauxe7uxe3o-entre-o-design-do-capacete-de-futebol-americano-e-lesuxf5es-no-pescouxe7o.-seis-medidas-da-cabeuxe7a-foram-feitas-em-cada-sujeito.-havia-30-sujeitos-em-cada-um-dos-truxeas-grupos-jogadores-de-futebol-americano-do-ensino-muxe9dio-grupo-1-jogadores-de-futebol-americano-universituxe1rio-grupo-2-e-nuxe3o-jogadores-de-futebol-americano-grupo-3.-as-seis-variuxe1veis-suxe3o}
+\addcontentsline{toc}{section}{Os dados do arquivo
+``\texttt{Jogadores.xls}'' foram coletados por G. R. Bryce e R. M.
+Barker (Apresentados em Rencher, 2002) como parte de um estudo
+preliminar sobre uma possível relação entre o design do capacete de
+futebol americano e lesões no pescoço. Seis medidas da cabeça foram
+feitas em cada sujeito. Havia 30 sujeitos em cada um dos três grupos:
+jogadores de futebol americano do ensino médio (grupo 1), jogadores de
+futebol americano universitário (grupo 2) e não jogadores de futebol
+americano (grupo 3). As seis variáveis são:}
+
+{
+\Large\bf
+\begin{itemize}
+    \item \texttt{Larg\_cab}: Largura da cabeça na dimensão mais larga;
+    \item \texttt{Circ\_cab}: Circunferência da cabeça;
+    \item \texttt{Frent\_tras}: Medida da frente para trás na altura dos olhos;
+    \item \texttt{Olh\_cab}: Medida do olho ao topo da cabeça;
+    \item \texttt{Ore\_cab}: Medida da orelha ao topo da cabeça;
+    \item \texttt{Larg\_quei}: Largura da mandíbula.
+\end{itemize}
+}
+
+\section*{1) Realize a análise exploratória de dados, apresentando a
+análise geral e por grupos (apresente tabelas e
+gráficos).}\label{realize-a-anuxe1lise-exploratuxf3ria-de-dados-apresentando-a-anuxe1lise-geral-e-por-grupos-apresente-tabelas-e-gruxe1ficos.}
+\addcontentsline{toc}{section}{1) Realize a análise exploratória de
+dados, apresentando a análise geral e por grupos (apresente tabelas e
+gráficos).}
+
+A primeira proposta de análise foi elaborada na
+Tabela~\ref{tbl-SUMMARY}, que apresenta as medidas de resumo das
+variáveis do conjunto de dados \texttt{Jogadores.xls}. A
+Tabela~\ref{tbl-SUMMARY} não leva em consideração a variável de grupo.
+
+\begin{table}
+
+\caption{\label{tbl-SUMMARY}Medidas de Resumo para as Variáveis do
+Conjunto de Dados \texttt{Jogadores.xlsx}.}
+
+\centering{
+
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccccccc}
+\toprule
+Variável & Média & Desvio Padrão & CV & Mínimo & 1º Quartil & Mediana & 3º Quartil & Máximo \\ 
+\midrule\addlinespace[2.5pt]
+Circu\_cab & 58,04 & 1,88 & 3,25\% & 54,8 & 56,90 & 57,55 & 59,15 & 63,5 \\ 
+Frent\_tras & 19,91 & 0,75 & 3,75\% & 18,5 & 19,42 & 19,90 & 20,40 & 21,8 \\ 
+Larg\_cab & 15,40 & 0,67 & 4,32\% & 13,5 & 15,00 & 15,50 & 15,65 & 17,5 \\ 
+Larg\_quei & 12,00 & 0,64 & 5,30\% & 10,5 & 11,50 & 12,00 & 12,50 & 13,5 \\ 
+olh\_cab & 11,37 & 1,68 & 14,76\% & 7,4 & 10,12 & 11,30 & 12,73 & 15,0 \\ 
+ore\_cab & 13,96 & 0,96 & 6,85\% & 11,1 & 13,40 & 13,90 & 14,50 & 16,5 \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+Podemos observar que, em termos de dispersão, a variável
+\texttt{olh\_cab} (Medida do olho ao topo da cabeça) possui o maior
+Desvio Padrão em proporção à sua Média (14,76\%), indicando uma
+variabilidade relativamente alta em comparação com outras medidas como
+\texttt{Circu\_cab} (Circunferência da cabeça), que tem uma
+variabilidade proporcional menor (3,25\%). Outro ponto é a proximidade
+entre a Média e a Mediana para a maioria das variáveis (ex:
+\texttt{Frent\_tras}, Média=19,91 e Mediana=19,90) sugere distribuições
+razoavelmente simétricas.
+
+Uma outra análise visual univariada pode ser feita a partir da
+Figura~\ref{fig-HIST_UNI_VAR}. Onde é apresentado o histograma para cada
+variável do \emph{dataset} analisado.
+
+\begin{figure}[H]
+
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-1.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-1}\texttt{Larg\_cab}}
+
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-2.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-2}\texttt{Circu\_cab}}
+
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-3.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-3}\texttt{Frent\_tras}}
+
+\end{minipage}%
+\newline
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-4.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-4}\texttt{olh\_cab}}
+
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-5.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-5}\texttt{ore\_cab}}
+
+\end{minipage}%
+%
+\begin{minipage}{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-HIST_UNI_VAR-6.pdf}}
+
+}
+
+\subcaption{\label{fig-HIST_UNI_VAR-6}\texttt{Larg\_quei}}
+
+\end{minipage}%
+
+\caption{\label{fig-HIST_UNI_VAR}Histograma das Variáveis Quantitativas
+do Conjunto de Dados \texttt{Jogadores.xls}.}
+
+\end{figure}%
+
+Os histogramas oferecem uma primeira visão sobre a distribuição de cada
+variável, ainda sem separação por grupo. Os histogramas de \textbf{(a)},
+\textbf{(c)} e \textbf{(f)} aparentam ser uma forma ligeiramente
+simétrica com uma concentração de dados em torno do centro - lembrando
+uma distribuição gaussiana.
+
+Apenas as variáveis de \textbf{(d)} e \textbf{(e)} se distanciam desse
+realidade de forma mais grosseira, com histogramas que lembram mais uma
+\emph{distribuição bimodal} (com dois picos claros), isso é um forte
+indicativo de que os dados, quando vistos de forma agregada, escondem a
+existência de pelo menos dois subgrupos com características distintas.
+Essa observação justifica plenamente a necessidade de analisar os dados
+por grupo. Uma conclusão feita em \textbf{(b)} é que a variável
+\texttt{Circu\_cab} mostra uma leve assimetria à direita.
+
+Visando uma análise global juntamente da finalidade deste relatório, foi
+elaborada a Tabela~\ref{tbl-SUMMARY_BY_GROUP}, que recalcula as medidas
+de resumo por grupo para cada uma das variáveis.
+
+\begin{table}
+
+\caption{\label{tbl-SUMMARY_BY_GROUP}Medidas de Resumo para as Variáveis
+do Conjunto de Dados \texttt{Jogadores.xlsx} por Grupo.}
+
+\centering{
+
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}ccccccccc}
+\toprule
+Grupo & Média & Desvio Padrão & CV & Mínimo & 1º Quartil & Mediana & 3º Quartil & Máximo \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{Circu\_cab} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 58,95 & 2,05 & 3,48\% & 55,9 & 57,20 & 58,40 & 60,67 & 63,5 \\ 
+2 & 57,39 & 1,71 & 2,98\% & 54,8 & 56,50 & 57,00 & 58,00 & 62,6 \\ 
+3 & 57,77 & 1,55 & 2,68\% & 55,0 & 56,75 & 57,65 & 58,65 & 61,7 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{Frent\_tras} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 20,11 & 0,84 & 4,19\% & 19,0 & 19,50 & 20,00 & 20,88 & 21,8 \\ 
+2 & 19,80 & 0,74 & 3,75\% & 18,5 & 19,30 & 19,90 & 20,20 & 21,5 \\ 
+3 & 19,81 & 0,62 & 3,11\% & 18,7 & 19,50 & 19,80 & 20,38 & 20,8 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{Larg\_cab} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 15,20 & 0,74 & 4,86\% & 13,5 & 15,00 & 15,50 & 15,50 & 17,5 \\ 
+2 & 15,42 & 0,64 & 4,13\% & 14,3 & 15,12 & 15,40 & 15,50 & 17,3 \\ 
+3 & 15,58 & 0,58 & 3,71\% & 14,6 & 15,30 & 15,50 & 15,90 & 17,3 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{Larg\_quei} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 12,27 & 0,69 & 5,64\% & 10,5 & 12,00 & 12,25 & 12,50 & 13,5 \\ 
+2 & 11,94 & 0,61 & 5,14\% & 10,5 & 11,53 & 11,90 & 12,38 & 13,3 \\ 
+3 & 11,80 & 0,52 & 4,41\% & 10,8 & 11,50 & 11,75 & 12,10 & 13,3 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{olh\_cab} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 13,08 & 1,04 & 7,97\% & 10,0 & 12,50 & 13,00 & 13,88 & 15,0 \\ 
+2 & 10,08 & 1,07 & 10,65\% & 8,2 & 9,45 & 9,90 & 10,47 & 12,8 \\ 
+3 & 10,95 & 1,21 & 11,03\% & 7,4 & 10,40 & 10,90 & 11,78 & 13,1 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{9}{l}{ore\_cab} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+1 & 14,73 & 0,94 & 6,41\% & 13,0 & 14,00 & 14,50 & 15,50 & 16,5 \\ 
+2 & 13,45 & 0,76 & 5,61\% & 11,1 & 12,85 & 13,45 & 14,05 & 14,5 \\ 
+3 & 13,70 & 0,63 & 4,57\% & 12,0 & 13,40 & 13,65 & 13,97 & 15,1 \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+A Tabela~\ref{tbl-SUMMARY_BY_GROUP} aprofunda a análise ao calcular as
+mesmas medidas de resumo, mas agora segmentadas para cada um dos três
+grupos: jogadores do ensino médio (1), jogadores universitários (2) e
+não jogadores (3). As princiapais diferenças observadas:
+
+\begin{itemize}
+\item
+  As variáveis \textbf{\texttt{olh\_cab}} (Olho ao topo da cabeça),
+  \textbf{\texttt{ore\_cab}} (Orelha ao topo da cabeça) e
+  \textbf{\texttt{Circu\_cab}} (Circunferência da cabeça) apresentam
+  diferenças entre os grupos ao olharmos para média e mediana de cada
+  uma delas. Sendo que existe um padrão nessa diferença de grupos, pois,
+  o Grupo 1 apresenta estatísticas maiores que o Grupo 3 que, por sua
+  vez, apresenta estatísticas maiores que o Grupo 2.
+\item
+  Em contra-partida, \textbf{\texttt{Frent\_tras}} (Frente para trás),
+  \textbf{\texttt{Larg\_cab}} (Largura da cabeça na dimensão mais larga)
+  e \textbf{\texttt{Larg\_quei}} (argura da mandíbula) mostraram
+  estatísticas muito próximas entre os três grupos, indicando que ela
+  provavelmente tem baixo poder para discriminar os grupos.
+\end{itemize}
+
+No entanto, é importante ressaltar que as conclusões são baseadas em uma
+análise descritiva dos dados. Tendo em vista que as disparidades
+existentes entre os grupos não são de alta magnitude em todas as
+variáveis, para afirmar que os grupos de fato diferem entre si,
+poderíamos aplicar, por exemplo, uma MANOVA.
+
+Por fim, foi desenhada a Figura~\ref{fig-BOXPLOT_BY_GROUP}. Podemos
+avaliar a diferênça entre os grupos dentro das variáveis de uma forma
+visual por meio de Boxplots.
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-BOXPLOT_BY_GROUP-1.pdf}}
+
+}
+
+\caption{\label{fig-BOXPLOT_BY_GROUP}Boxplot das Variáveis do Conjunto
+de Dados \texttt{Jogadores.xlsx} por Grupo.}
+
+\end{figure}%
+
+Os boxplots da Figura~\ref{fig-BOXPLOT_BY_GROUP} permitem uma comparação
+visual direta da distribuição das variáveis entre os grupos, confirmando
+e reforçando as observações da análise das medidas de resumo da
+Tabela~\ref{tbl-SUMMARY_BY_GROUP}. As variáveis
+\textbf{\texttt{olh\_cab}}, \textbf{\texttt{ore\_cab}} e
+\textbf{\texttt{Circu\_cab}} demonstram as diferenças mais nítidas: as
+``caixas'' do Grupo 1 estão posicionadas visivelmente acima das caixas
+dos Grupos 2 e 3, indicando pouca sobreposição. Visualmente,
+\textbf{\texttt{olh\_cab}} parece ser a variável com maior poder de
+discriminação. Essa clara separação entre os grupos para ambas as
+variáveis explica a bimodalidade - das variáveis
+\textbf{\texttt{olh\_cab}} e \textbf{\texttt{ore\_cab}} - e assimetria -
+da variável \textbf{\texttt{Circu\_cab}} - observada nos histogramas da
+Figura~\ref{fig-HIST_UNI_VAR}.
+
+Em contrapartida, as demais variáveis mostram um poder de distinção
+menor. \textbf{\texttt{Frent\_tras}}, por exemplo, apresenta boxplots
+quase perfeitamente alinhados, confirmando sua baixa capacidade de
+diferenciar os grupos. As outras medidas também exibem sobreposição
+considerável, apesar de algumas diferenças nas medianas e na presença de
+valores discrepantes (outliers) no gráfico.
+
+De modo a fechar a análise exploratória e confirmar tudo o que já foi
+dito, foi elaborado a Figura~\ref{fig-PAIRPLOT}.
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{RLS_LISTA_V_files/figure-pdf/fig-PAIRPLOT-1.pdf}}
+
+}
+
+\caption{\label{fig-PAIRPLOT}Pairplot do Conjunto de Dados Segmentadas
+pelo Grupo de Jogadores.}
+
+\end{figure}%
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{quote}
+\textbf{NOTA:} A título de bônus para a Questão 2, e como complemento à
+Análise Exploratória de Dados, será executada uma Análise de Variância
+Multivariada (MANOVA) com o objetivo de verificar a existência de
+diferenças estatisticamente significativas entre os grupos.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section*{2) Faça testes de normalidade multivariada e teste de
+homogeneidade de
+variância.}\label{fauxe7a-testes-de-normalidade-multivariada-e-teste-de-homogeneidade-de-variuxe2ncia.}
+\addcontentsline{toc}{section}{2) Faça testes de normalidade
+multivariada e teste de homogeneidade de variância.}
+
+A Análise Discriminante apresenta os seguintes pressupostos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Normalidade Multivariada das observações;
+\item
+  Matrizes de Covariâncias dos grupos deve ser iguais.
+\end{enumerate}
+
+Desta forma, para verificar a \emph{Normalidade Multivariada}, foram
+aplicados os Testes de Normalidade de Mardia, Henze-Zirklers e de
+Royston sob as hipóteses:
+
+\[
+\begin{cases} H_{0}: \text{Os dados seguem uma distribuição normal multivariada;} \\ H_{1}: \text{Os dados não seguem uma distribuição normal multivariada.} \end{cases}
+\]
+
+\noindent Veja a Tabela~\ref{tbl-MULT_NORM_TEST_MARDIA},
+Tabela~\ref{tbl-MULT_NORM_TEST_HZ},
+Tabela~\ref{tbl-MULT_NORM_TEST_ROYSTON}.
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2237}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2895}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1447}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1579}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1842}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_MARDIA}Teste de Mardia para
+Normalidade Multivariada.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Mardia Skewness & 84,869 & 0,008 & asymptotic & Not normal \\
+Mardia Kurtosis & 0,927 & 0,354 & asymptotic & Normal \\
+
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2055}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3014}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1507}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1644}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1781}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_HZ}Teste de Henze-Zirkler para
+Normalidade Multivariada.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Henze-Zirkler & 0,941 & 0,228 & asymptotic & Normal \\
+
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1324}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3235}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1618}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1765}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2059}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_ROYSTON}Teste de Royston para
+Normalidade Multivariada.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Royston & 30,218 & \textless0.001 & asymptotic & Not normal \\
+
+\end{longtable}
+
+De certa forma houve empate entre os testes apresentados pela
+Tabela~\ref{tbl-MULT_NORM_TEST_MARDIA},
+Tabela~\ref{tbl-MULT_NORM_TEST_HZ},
+Tabela~\ref{tbl-MULT_NORM_TEST_ROYSTON}. Para corrigir isso foi,
+primeiramente, realizado o Teste de Shapiro-Wilk para normalidade
+univariada. Os resultados estão disponíveis na
+Tabela~\ref{tbl-SHAPIRO_UNIVAR}.
+
+\begin{table}
+
+\caption{\label{tbl-SHAPIRO_UNIVAR}Teste de Shapiro-Wilk para
+Normalidade Univariada.}
+
+\centering{
+
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccl}
+\toprule
+Variável & Estatística \(W\) & Valor \(p\) & Normalidade \\ 
+\midrule\addlinespace[2.5pt]
+Larg\_cab & 0,9464 & 0,0010 & Not normal \\ 
+Circu\_cab & 0,9453 & 0,0009 & Not normal \\ 
+Frent\_tras & 0,9797 & 0,1723 & Normal \\ 
+olh\_cab & 0,9832 & 0,2967 & Normal \\ 
+ore\_cab & 0,9727 & 0,0548 & Normal \\ 
+Larg\_quei & 0,9857 & 0,4338 & Normal \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+Foi constatada a não normalidade apenas às variáveis \texttt{Larg\_cab}
+e \texttt{Circu\_cab}. Com isso, foi aplicada tranformação de Box-Cox
+com o parâmetro \(\lambda\) estimado por máxima verossimilhança
+(\(\lambda\) ótimo), dada pela seguinte expressão:
+\[Y^{(\lambda)} = \dfrac{Y^{\lambda} - 1}{\lambda}.\] Foi usada a
+seguinte sintaxe no R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# [2.2] TRANSFORMAÇÃO BOX{-}COX}
+\CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{Players.trf }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{*}\NormalTok{ Players}
+
+\NormalTok{m1.for.boxcox }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ Larg\_cab }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ Players.trf)}
+\NormalTok{r1.boxcox }\OtherTok{\textless{}{-}}\NormalTok{ MASS}\SpecialCharTok{::}\FunctionTok{boxcox}\NormalTok{(m1.for.boxcox, }\AttributeTok{lambda =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{))}
+\NormalTok{lambda1.optim }\OtherTok{\textless{}{-}}\NormalTok{ r1.boxcox}\SpecialCharTok{$}\NormalTok{x[}\FunctionTok{which.max}\NormalTok{(r1.boxcox}\SpecialCharTok{$}\NormalTok{y)]}
+\NormalTok{Players.trf}\SpecialCharTok{$}\NormalTok{Larg\_cab }\OtherTok{\textless{}{-}}\NormalTok{ (Players.trf}\SpecialCharTok{$}\NormalTok{Larg\_cab}\SpecialCharTok{\^{}}\NormalTok{lambda1.optim }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ lambda1.optim}
+
+\NormalTok{m2.for.boxcox }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ Circu\_cab }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ Players.trf)}
+\NormalTok{r2.boxcox }\OtherTok{\textless{}{-}}\NormalTok{ MASS}\SpecialCharTok{::}\FunctionTok{boxcox}\NormalTok{(m2.for.boxcox, }\AttributeTok{lambda =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{))}
+\NormalTok{lambda2.optim }\OtherTok{\textless{}{-}}\NormalTok{ r1.boxcox}\SpecialCharTok{$}\NormalTok{x[}\FunctionTok{which.max}\NormalTok{(r2.boxcox}\SpecialCharTok{$}\NormalTok{y)]}
+\NormalTok{Players.trf}\SpecialCharTok{$}\NormalTok{Circu\_cab }\OtherTok{\textless{}{-}}\NormalTok{ (Players.trf}\SpecialCharTok{$}\NormalTok{Circu\_cab}\SpecialCharTok{\^{}}\NormalTok{lambda2.optim }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ lambda2.optim}
+\end{Highlighting}
+\end{Shaded}
+
+Desta forma, foi aplicado novamente o Teste de Shapiro-Wilk para
+normalidade univariada com resultados dispostos na
+Tabela~\ref{tbl-SHAPIRO_UNIVAR2}. E posteriomente os Testes de
+Normalidade Multivariada apresentados na
+Tabela~\ref{tbl-MULT_NORM_TEST_MARDIA2},
+Tabela~\ref{tbl-MULT_NORM_TEST_HZ2},
+Tabela~\ref{tbl-MULT_NORM_TEST_ROYSTON2}.
+
+\begin{table}
+
+\caption{\label{tbl-SHAPIRO_UNIVAR2}Teste de Shapiro-Wilk para
+Normalidade Univariada.}
+
+\centering{
+
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{0,7\linewidth}{@{\extracolsep{\fill}}lccl}
+\toprule
+Variável & Estatística \(W\) & Valor \(p\) & Normalidade \\ 
+\midrule\addlinespace[2.5pt]
+Larg\_cab & 0,9530 & 0,0026 & Not normal \\ 
+Circu\_cab & 0,9746 & 0,0754 & Normal \\ 
+Frent\_tras & 0,9797 & 0,1723 & Normal \\ 
+olh\_cab & 0,9832 & 0,2967 & Normal \\ 
+ore\_cab & 0,9727 & 0,0548 & Normal \\ 
+Larg\_quei & 0,9857 & 0,4338 & Normal \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2267}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2933}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1467}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1600}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1733}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_MARDIA2}Teste de Mardia para
+Normalidade Multivariada para os Dados Transformados.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Mardia Skewness & 73,966 & 0,054 & asymptotic & Normal \\
+Mardia Kurtosis & 0,504 & 0,615 & asymptotic & Normal \\
+
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2055}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3014}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1507}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1644}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1781}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_HZ2}Teste de Henze-Zirkler para
+Normalidade Multivariada para os Dados Transformados.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Henze-Zirkler & 0,921 & 0,357 & asymptotic & Normal \\
+
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1324}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3235}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1618}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1765}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2059}}@{}}
+
+\caption{\label{tbl-MULT_NORM_TEST_ROYSTON2}Teste de Royston para
+Normalidade Multivariada para os Dados Transformados.}
+
+\tabularnewline
+
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Estatística de Teste
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Valor \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Método
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Normalidade
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Royston & 21,261 & 0,002 & asymptotic & Not normal \\
+
+\end{longtable}
+
+Os resultados mostram que nem após a transformação Box-Cox a variável
+\texttt{Larg\_cab} aderiu a distribuição normal. Entretanto, os testes
+de normalidade se mostraram mais concordantes entre si (adessão dos
+dados a normalidade multivariada), sendo que apenas o Teste de Royston
+apresentou resultado divergente. Agora, que os dados seguem uma
+distribuição normal multivariada, temos que verificar a
+\emph{Homogeneidade/Homocedasticidade das Matrizes de Covariâncias}, foi
+aplicado o Teste M de Box sob as hipóteses:
+
+\[
+\begin{cases} H_{0}: \text{As matrizes de covariâncias são iguais;} \\ H_{1}: \text{As matrizes de covariâncias não são iguais.} \end{cases}
+\]
+
+\noindent Veja a Tabela~\ref{tbl-MBox}.
+
+\begin{longtable}[]{@{}ccc@{}}
+
+\caption{\label{tbl-MBox}Teste M de Box para Homogeneidade das Matrizes
+de Covariâncias dos Grupos do Conjunto de Dados.}
+
+\tabularnewline
+
+\toprule\noalign{}
+Estatística de Teste & Graus de Liberdade & P-Valor \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+55,79338 & 42 & 0,0753552 \\
+
+\end{longtable}
+
+Como os pressupostos da Análise de Discriminante e Análise de Variância
+Multivariada são quase os mesmos, foi feita uma MANOVA para complemento
+da Análise Exploratória de Dados e para verificar se existe realmente
+diferença entre os grupos de forma estatisticamente significativa. Veja
+a Tabela~\ref{tbl-MANOVA}.
+
+\begin{table}
+
+\caption{\label{tbl-MANOVA}Análisede Variância Multivariada para o Fator
+Grupo de Jogadores.}
+
+\centering{
+
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrcccccc}
+\toprule
+Teste & \(gl\) & Estatística & F \(\approx\) & \(gl_{\text{num}}\) & \(gl_{\text{den}}\) & Valor \(p\) & Significância \\ 
+\midrule\addlinespace[2.5pt]
+Wilks & 1 & 0,54 & 11,68 & 6 & 83 & 1,91 $\times$ 10\textsuperscript{-9} & *** \\ 
+Pillai & 1 & 0,46 & 11,68 & 6 & 83 & 1,91 $\times$ 10\textsuperscript{-9} & *** \\ 
+Hotelling-Lawley & 1 & 0,84 & 11,68 & 6 & 83 & 1,91 $\times$ 10\textsuperscript{-9} & *** \\ 
+Roy & 1 & 0,84 & 11,68 & 6 & 83 & 1,91 $\times$ 10\textsuperscript{-9} & *** \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+Significância: Rejeita-se \(H_{0}\) para \(\alpha = 0\) ('\texttt{***}'); \(\alpha = 0.001\) ('\texttt{**}'); \(\alpha = 0.01\) ('\texttt{*}'); \(\alpha = 0.05\) ('\texttt{.}')\\
+\end{minipage}
+
+}
+
+\end{table}%
+
+Pode-se observar que todos os testes apontam à mesma direção: a
+diferença significativa entre os grupos. Logo, prosseguiremos para a
+Análise de Discriminante.
+
+\section*{3) Realize a análise discriminante utilizando todas as
+variáveis, apresente as funções discriminantes e a avaliação do modelo
+com a matriz de confusão e a acurácia (pelo
+menos).}\label{realize-a-anuxe1lise-discriminante-utilizando-todas-as-variuxe1veis-apresente-as-funuxe7uxf5es-discriminantes-e-a-avaliauxe7uxe3o-do-modelo-com-a-matriz-de-confusuxe3o-e-a-acuruxe1cia-pelo-menos.}
+\addcontentsline{toc}{section}{3) Realize a análise discriminante
+utilizando todas as variáveis, apresente as funções discriminantes e a
+avaliação do modelo com a matriz de confusão e a acurácia (pelo menos).}
+
+\begingroup
+\setlength\LTleft{0,25\linewidth}
+\setlength\LTright{0,25\linewidth}\fontsize{12.0pt}{14.4pt}\selectfont
+
+\begin{longtable}{@{\extracolsep{\fill}}lcc}
+
+\caption{\label{tbl-COEFS_LDA}Coeficientes dos Discriminantes Lineares.}
+
+\tabularnewline
+
+\toprule
+Variável & LD1 & LD2 \\ 
+\midrule\addlinespace[2.5pt]
+Larg\_cab & 117,8461 & 173,3276 \\ 
+Frent\_tras & 0,0004 & -0,0125 \\ 
+olh\_cab & -0,6443 & 0,5461 \\ 
+ore\_cab & -0,5119 & -0,3899 \\ 
+Larg\_quei & -0,8301 & -1,5138 \\ 
+\bottomrule
+
+\end{longtable}
+
+\endgroup
+
+A partir do modelo apresentado pela Tabela~\ref{tbl-COEFS_LDA}, foi
+feita uma previsão para os dados e, desta forma, construída a *Matriz de
+Confusão dada pela Tabela~\ref{tbl-MATRIX_CONFUSION}.
+
+\begingroup
+\setlength\LTleft{0,325\linewidth}
+\setlength\LTright{0,325\linewidth}\fontsize{12.0pt}{14.4pt}\selectfont
+
+\begin{longtable}{@{\extracolsep{\fill}}l|ccc}
+
+\caption{\label{tbl-MATRIX_CONFUSION}Matriz de Confunsão do Modelo de
+Discriminação Linear.}
+
+\tabularnewline
+
+\toprule
+ & Grupo 1 & Grupo 2 & Grupo 3 \\ 
+\midrule\addlinespace[2.5pt]
+Grupo 1 & 26 & 1 & 3 \\ 
+Grupo 2 & 1 & 20 & 9 \\ 
+Grupo 3 & 2 & 8 & 20 \\ 
+\bottomrule
+
+\end{longtable}
+
+\endgroup
+
+A partir da Tabela~\ref{tbl-MATRIX_CONFUSION}, foi calculada a acuracia
+(percentual de acerto) do modelo descrito pela
+Tabela~\ref{tbl-COEFS_LDA}. A acurácia obtida foi cerca de 73,33\%.
+
+\section*{4) Realize o procedimento stepwise e selecione um subgrupo de
+variáveis.}\label{realize-o-procedimento-stepwise-e-selecione-um-subgrupo-de-variuxe1veis.}
+\addcontentsline{toc}{section}{4) Realize o procedimento stepwise e
+selecione um subgrupo de variáveis.}
+
+\section*{5) Realize nova análise discriminante utilizando as variáveis
+selecionadas, apresente as funções discriminantes e a avaliação do
+modelo com a matriz de confusão e a acurácia (pelo
+menos).}\label{realize-nova-anuxe1lise-discriminante-utilizando-as-variuxe1veis-selecionadas-apresente-as-funuxe7uxf5es-discriminantes-e-a-avaliauxe7uxe3o-do-modelo-com-a-matriz-de-confusuxe3o-e-a-acuruxe1cia-pelo-menos.}
+\addcontentsline{toc}{section}{5) Realize nova análise discriminante
+utilizando as variáveis selecionadas, apresente as funções
+discriminantes e a avaliação do modelo com a matriz de confusão e a
+acurácia (pelo menos).}
+
+\section*{6) Pesquise uma função discriminante quadrática e realize mais
+uma AD com essa função, fazendo a avaliação do modelo (se desejar faça
+com todas as variáveis e com as selecionadas no stepwise, ou faça
+somente com as
+selecionadas).}\label{pesquise-uma-funuxe7uxe3o-discriminante-quadruxe1tica-e-realize-mais-uma-ad-com-essa-funuxe7uxe3o-fazendo-a-avaliauxe7uxe3o-do-modelo-se-desejar-fauxe7a-com-todas-as-variuxe1veis-e-com-as-selecionadas-no-stepwise-ou-fauxe7a-somente-com-as-selecionadas.}
+\addcontentsline{toc}{section}{6) Pesquise uma função discriminante
+quadrática e realize mais uma AD com essa função, fazendo a avaliação do
+modelo (se desejar faça com todas as variáveis e com as selecionadas no
+stepwise, ou faça somente com as selecionadas).}
+
+\section*{7) Compare as funções discriminantes em relação a matriz de
+confusão e acurácia e escolha a que você considera
+melhor.}\label{compare-as-funuxe7uxf5es-discriminantes-em-relauxe7uxe3o-a-matriz-de-confusuxe3o-e-acuruxe1cia-e-escolha-a-que-vocuxea-considera-melhor.}
+\addcontentsline{toc}{section}{7) Compare as funções discriminantes em
+relação a matriz de confusão e acurácia e escolha a que você considera
+melhor.}
+
+
+
+
+\end{document}
