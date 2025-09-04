@@ -223,7 +223,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+ <span class="menu-text">Referências</span></a>
   </div>
 </li>
     </ul>
@@ -332,8 +332,8 @@ window.Quarto = {
 <li><p>Matriz de distâncias: <span class="math inline">\(\mathbf{D_{n \times n}} = \begin{bmatrix} d_{11} &amp; d_{12} &amp; \ldots &amp; d_{1n} \\ d_{21} &amp; d_{22} &amp; \ldots &amp; d_{2n} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ d_{n1} &amp; d_{n2} &amp; \ldots &amp; d_{nn} \end{bmatrix}\)</span>, onde <span class="math inline">\(d_{11} = d_{22} = \ldots = d_{nn} = 0\)</span>. As distâncias entre os pares de indivíduos e são calculadas de diversas maneiras, de acordo com o tipo de variável. Para variáveis quantitativas, são usualmente utilizadas:</p>
 <ul>
 <li><p><strong>Distância de Minkowski:</strong> <span class="math inline">\(d(x_{i}, x_{j}) = \left[ \sum_{k=1}^{p} (x_{ik} - x_{jk})^{n} \right]^{1/n}\)</span>, que é a distância mais geral, tendo como casos particulares a distância Euclidiana, quando <span class="math inline">\(n = 2\)</span> e a distância de Manhattan quando <span class="math inline">\(n = 1\)</span>.</p></li>
-<li><p><strong>Distância Euclidiana:</strong> <span class="math inline">\(d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}\)</span></p></li>
-<li><p><strong>Distância de Mahalanobis:</strong> <span class="math inline">\(d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})\)</span></p></li>
+<li><p><strong>Distância Euclidiana:</strong> <span class="math inline">\(d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}\)</span>.</p></li>
+<li><p><strong>Distância de Mahalanobis:</strong> <span class="math inline">\(d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})\)</span>.</p></li>
 </ul></li>
 </ol>
 <p>Essas medidas podem ser apresentadas em tabelas agregando as diversas variáveis, ou em gráficos de duas ou três dimensões que possam representar o inter-relacionamento entre as variáveis como correlogramas, diagramas de dispersão (matrix plot), faces de Chernoff, etc.</p>
@@ -805,8 +805,8 @@ window.Quarto = {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../references.html" class="pagination-link" aria-label="Referências">
+        <span class="nav-page-text">Referências</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Código fonte</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -879,9 +879,9 @@ window.Quarto = {
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>**Distância de Minkowski:** $d(x_{i}, x_{j}) = \left[ \sum_{k=1}^{p} (x_{ik} - x_{jk})^{n} \right]^{1/n}$, que é a distância mais geral, tendo como casos particulares a distância Euclidiana, quando $n = 2$ e a distância de Manhattan quando $n = 1$.</span>
 <span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>**Distância Euclidiana:** $d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}$</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>**Distância Euclidiana:** $d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}$.</span>
 <span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>**Distância de Mahalanobis:** $d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})$</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">    * </span>**Distância de Mahalanobis:** $d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})$.</span>
 <span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>Essas medidas podem ser apresentadas em tabelas agregando as diversas variáveis, ou em gráficos de duas ou três dimensões que possam representar o inter-relacionamento entre as variáveis como correlogramas, diagramas de dispersão (matrix plot), faces de Chernoff, etc.</span>
 <span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>

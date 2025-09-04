@@ -67,9 +67,9 @@ A análise exploratória de dados multivariados (AED) possibilita a detecção d
 
     * **Distância de Minkowski:** $d(x_{i}, x_{j}) = \left[ \sum_{k=1}^{p} (x_{ik} - x_{jk})^{n} \right]^{1/n}$, que é a distância mais geral, tendo como casos particulares a distância Euclidiana, quando $n = 2$ e a distância de Manhattan quando $n = 1$.
 
-    * **Distância Euclidiana:** $d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}$
+    * **Distância Euclidiana:** $d(x_{i}, x_{j}) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^{2}}$.
 
-    * **Distância de Mahalanobis:** $d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})$
+    * **Distância de Mahalanobis:** $d(x_{i}, x_{j}) = (\mathbf{x}_{i} - \mathbf{x}_{j})^{\intercal} \mathbf{S}^{-1} (\mathbf{x}_{i} - \mathbf{x}_{j})$.
 
 Essas medidas podem ser apresentadas em tabelas agregando as diversas variáveis, ou em gráficos de duas ou três dimensões que possam representar o inter-relacionamento entre as variáveis como correlogramas, diagramas de dispersão (matrix plot), faces de Chernoff, etc.
 
